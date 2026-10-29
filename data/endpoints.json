@@ -1,0 +1,1654 @@
+[
+  {
+    "path": "/castle/status",
+    "summary": "关隘首领",
+    "category": "世界首领",
+    "level": 2,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/arena/awesome",
+    "summary": "名剑排行",
+    "category": "名剑相关",
+    "level": 1,
+    "ticket": true,
+    "params": [
+      {
+        "name": "mode",
+        "type": "integer",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": true,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/arena/recent",
+    "summary": "名剑战绩",
+    "category": "名剑相关",
+    "level": 1,
+    "ticket": true,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "mode",
+        "type": "string",
+        "required": false,
+        "description": "比赛模式"
+      }
+    ]
+  },
+  {
+    "path": "/arena/schools",
+    "summary": "名剑统计",
+    "category": "名剑相关",
+    "level": 1,
+    "ticket": true,
+    "params": [
+      {
+        "name": "mode",
+        "type": "integer",
+        "required": true,
+        "description": "比赛模式"
+      }
+    ]
+  },
+  {
+    "path": "/recruit/search",
+    "summary": "团队招募",
+    "category": "团队招募",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器大区"
+      },
+      {
+        "name": "label",
+        "type": "integer",
+        "required": true,
+        "description": "服务类型"
+      },
+      {
+        "name": "keyword",
+        "type": "string",
+        "required": false,
+        "description": "关键字"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": true,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/duowan/statistics",
+    "summary": "统战歪歪",
+    "category": "多玩语音",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      }
+    ]
+  },
+  {
+    "path": "/server/status/check",
+    "summary": "大区状态",
+    "category": "大区状态",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "type",
+        "type": "integer",
+        "required": false,
+        "description": "状态类型：1=数据库合集，其他=xoyo 在线状态"
+      }
+    ]
+  },
+  {
+    "path": "/event/collect",
+    "summary": "奇遇汇总",
+    "category": "奇遇相关",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "num",
+        "type": "integer",
+        "required": false,
+        "description": "统计天数"
+      }
+    ]
+  },
+  {
+    "path": "/event/missing",
+    "summary": "未触发的",
+    "category": "奇遇相关",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      }
+    ]
+  },
+  {
+    "path": "/event/recent",
+    "summary": "近期奇遇",
+    "category": "奇遇相关",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/event/records",
+    "summary": "奇遇记录",
+    "category": "奇遇相关",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "full",
+        "type": "integer",
+        "required": false,
+        "description": "是否返回完整列表（含未触发）"
+      }
+    ]
+  },
+  {
+    "path": "/event/statistics",
+    "summary": "奇遇统计",
+    "category": "奇遇相关",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "奇遇名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/event/strategy",
+    "summary": "奇遇攻略",
+    "category": "奇遇相关",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "奇遇名称"
+      }
+    ]
+  },
+  {
+    "path": "/home/flower",
+    "summary": "家园鲜花",
+    "category": "家园相关",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "鲜花名称"
+      },
+      {
+        "name": "map",
+        "type": "string",
+        "required": false,
+        "description": "地图名称"
+      }
+    ]
+  },
+  {
+    "path": "/home/furniture",
+    "summary": "家园装饰",
+    "category": "家园相关",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "装饰名称"
+      }
+    ]
+  },
+  {
+    "path": "/home/travel",
+    "summary": "器物图谱",
+    "category": "家园相关",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "器物名称"
+      }
+    ]
+  },
+  {
+    "path": "/food/list",
+    "summary": "小吃小药",
+    "category": "小吃小药",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "心法名称"
+      }
+    ]
+  },
+  {
+    "path": "/mentor/search",
+    "summary": "师徒列表",
+    "category": "师徒相关",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "label",
+        "type": "integer",
+        "required": true,
+        "description": "师徒类型"
+      },
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器大区"
+      },
+      {
+        "name": "keyword",
+        "type": "string",
+        "required": false,
+        "description": "关键字"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/battle/records",
+    "summary": "帮战记录",
+    "category": "帮战记录",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "查询信息"
+      }
+    ]
+  },
+  {
+    "path": "/school/matrix",
+    "summary": "阵眼效果",
+    "category": "心法配装",
+    "level": 1,
+    "ticket": true,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "职业名称"
+      }
+    ]
+  },
+  {
+    "path": "/school/search",
+    "summary": "配装搜索",
+    "category": "心法配装",
+    "level": 2,
+    "ticket": true,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "门派名称"
+      },
+      {
+        "name": "mode",
+        "type": "string",
+        "required": false,
+        "description": "玩法模式"
+      }
+    ]
+  },
+  {
+    "path": "/school/seniority",
+    "summary": "资历榜单",
+    "category": "心法配装",
+    "level": 1,
+    "ticket": true,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "school",
+        "type": "string",
+        "required": false,
+        "description": "门派名称"
+      }
+    ]
+  },
+  {
+    "path": "/school/skills",
+    "summary": "技能信息",
+    "category": "心法配装",
+    "level": 1,
+    "ticket": true,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "门派名称"
+      },
+      {
+        "name": "update",
+        "type": "integer",
+        "required": false,
+        "description": "是否更新"
+      }
+    ]
+  },
+  {
+    "path": "/school/talent",
+    "summary": "奇穴信息",
+    "category": "心法配装",
+    "level": 1,
+    "ticket": true,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "门派名称"
+      },
+      {
+        "name": "update",
+        "type": "integer",
+        "required": false,
+        "description": "是否更新"
+      }
+    ]
+  },
+  {
+    "path": "/skill/calculate",
+    "summary": "急速计算",
+    "category": "急速计算",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "cooldown",
+        "type": "number",
+        "required": false,
+        "description": "技能 cd"
+      }
+    ]
+  },
+  {
+    "path": "/skill/rework",
+    "summary": "技改记录",
+    "category": "急速计算",
+    "level": 0,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/reward/statistics",
+    "summary": "掉落统计",
+    "category": "掉落统计",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "物品名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": true,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/rank/arena",
+    "summary": "跨服名剑",
+    "category": "排行榜单",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "mode",
+        "type": "integer",
+        "required": false,
+        "description": "竞技模式 0=2v2/1=3v3/2=5v5"
+      }
+    ]
+  },
+  {
+    "path": "/rank/championship",
+    "summary": "武林争霸",
+    "category": "排行榜单",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "camp",
+        "type": "integer",
+        "required": false,
+        "description": "阵营 1=浩气/2=恶人"
+      }
+    ]
+  },
+  {
+    "path": "/rank/constable",
+    "summary": "捕快荣誉",
+    "category": "排行榜单",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      }
+    ]
+  },
+  {
+    "path": "/rank/outlaw",
+    "summary": "江湖浪客",
+    "category": "排行榜单",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      }
+    ]
+  },
+  {
+    "path": "/rank/statistics",
+    "summary": "排行统计",
+    "category": "排行榜单",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "榜单名称"
+      }
+    ]
+  },
+  {
+    "path": "/rank/trials",
+    "summary": "试炼之地",
+    "category": "排行榜单",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "榜单名称"
+      }
+    ]
+  },
+  {
+    "path": "/rank/wanted",
+    "summary": "决斗挑战",
+    "category": "排行榜单",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "mode",
+        "type": "integer",
+        "required": false,
+        "description": "1=公开/2=私密"
+      }
+    ]
+  },
+  {
+    "path": "/news/announce",
+    "summary": "维护公告",
+    "category": "新闻公告",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/news/records",
+    "summary": "新闻资讯",
+    "category": "新闻公告",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/active/calendar",
+    "summary": "活动日历",
+    "category": "活动日历",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "num",
+        "type": "integer",
+        "required": false,
+        "description": "天数偏移（单日）或区间半径（list）"
+      },
+      {
+        "name": "mode",
+        "type": "string",
+        "required": false,
+        "description": "'day' 单日 / 'list' 前后区间"
+      }
+    ]
+  },
+  {
+    "path": "/active/celebs",
+    "summary": "地图活动",
+    "category": "活动日历",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "事件名称"
+      }
+    ]
+  },
+  {
+    "path": "/firework/records",
+    "summary": "烟花记录",
+    "category": "烟花事件",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      }
+    ]
+  },
+  {
+    "path": "/trade/demon",
+    "summary": "金价行情",
+    "category": "物价交易",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/trade/item/records",
+    "summary": "外观价格",
+    "category": "物价交易",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "物品名称"
+      },
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      }
+    ]
+  },
+  {
+    "path": "/trade/item/search",
+    "summary": "外观搜索",
+    "category": "物价交易",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "物品名称"
+      }
+    ]
+  },
+  {
+    "path": "/trade/manufacture",
+    "summary": "成本计算",
+    "category": "物价交易",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "成品名称"
+      },
+      {
+        "name": "source",
+        "type": "integer",
+        "required": false,
+        "description": "价格来源 0=交易行/1=jx3box"
+      }
+    ]
+  },
+  {
+    "path": "/trade/records",
+    "summary": "物品价格",
+    "category": "物价交易",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "物品名称"
+      },
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      }
+    ]
+  },
+  {
+    "path": "/trade/wanbaolou",
+    "summary": "编号搜索",
+    "category": "物价交易",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true,
+        "description": "角色编号"
+      }
+    ]
+  },
+  {
+    "path": "/tieba/item/records",
+    "summary": "外观记录",
+    "category": "百度贴吧",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "物品名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "返回数量"
+      }
+    ]
+  },
+  {
+    "path": "/tieba/random",
+    "summary": "百度贴吧",
+    "category": "百度贴吧",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "tags",
+        "type": "string",
+        "required": true,
+        "description": "帖子类型"
+      },
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "返回数量"
+      }
+    ]
+  },
+  {
+    "path": "/monster/records",
+    "summary": "角色百战",
+    "category": "百战记录",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      }
+    ]
+  },
+  {
+    "path": "/monster/weekly",
+    "summary": "百战首领",
+    "category": "百战记录",
+    "level": 2,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/steed/records",
+    "summary": "的卢拍卖",
+    "category": "的卢拍卖",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      }
+    ]
+  },
+  {
+    "path": "/exam/search",
+    "summary": "科举答案",
+    "category": "科举搜索",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "subject",
+        "type": "string",
+        "required": true,
+        "description": "科举试题"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "返回数量"
+      }
+    ]
+  },
+  {
+    "path": "/mech/decrypt",
+    "summary": "秘境方位",
+    "category": "秘境方位",
+    "level": 1,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/chat/records",
+    "summary": "角色聊天",
+    "category": "聊天记录",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "每页数量"
+      },
+      {
+        "name": "page",
+        "type": "integer",
+        "required": false,
+        "description": "页码"
+      }
+    ]
+  },
+  {
+    "path": "/role/achievement",
+    "summary": "成就查询",
+    "category": "角色信息",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "role",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "成就名称"
+      }
+    ]
+  },
+  {
+    "path": "/role/detail",
+    "summary": "角色详情",
+    "category": "角色信息",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器大区"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "history",
+        "type": "integer",
+        "required": false,
+        "description": "是否返回改名 / 帮会历史"
+      }
+    ]
+  },
+  {
+    "path": "/card/cached",
+    "summary": "名片缓存",
+    "category": "角色名片",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      }
+    ]
+  },
+  {
+    "path": "/card/preset",
+    "summary": "名片预设",
+    "category": "角色名片",
+    "level": 2,
+    "ticket": true,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      }
+    ]
+  },
+  {
+    "path": "/card/random",
+    "summary": "随机名片",
+    "category": "角色名片",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "force",
+        "type": "string",
+        "required": false,
+        "description": "门派名称"
+      },
+      {
+        "name": "body",
+        "type": "string",
+        "required": false,
+        "description": "体型名称"
+      }
+    ]
+  },
+  {
+    "path": "/card/record",
+    "summary": "名片记录",
+    "category": "角色名片",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      }
+    ]
+  },
+  {
+    "path": "/card/records",
+    "summary": "名片历史",
+    "category": "角色名片",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "like",
+        "type": "boolean",
+        "required": false,
+        "description": "是否只看点赞"
+      }
+    ]
+  },
+  {
+    "path": "/calcd/attribute",
+    "summary": "装备属性",
+    "category": "角色属性",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "format",
+        "type": "string",
+        "required": false,
+        "description": "返回格式：calcd 返回计算后的装备详情与属性面板，client 返回客户端原始格式"
+      }
+    ]
+  },
+  {
+    "path": "/calcd/detail",
+    "summary": "装备详情",
+    "category": "角色属性",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "kungfu",
+        "type": "string",
+        "required": true,
+        "description": "心法名称，如花间游"
+      },
+      {
+        "name": "type",
+        "type": "string",
+        "required": true,
+        "description": "装备类型：秘境挑战 / 竞技对抗 / 休闲 / 通用"
+      },
+      {
+        "name": "format",
+        "type": "string",
+        "required": false,
+        "description": "返回格式：calcd 返回计算后的装备详情与属性面板，client 返回客户端原始格式"
+      }
+    ]
+  },
+  {
+    "path": "/calcd/records",
+    "summary": "装备记录",
+    "category": "角色属性",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      }
+    ]
+  },
+  {
+    "path": "/trial/bosses",
+    "summary": "秒伤计算",
+    "category": "试炼之地",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "season",
+        "type": "string",
+        "required": true,
+        "description": "赛季名称：暗影千机 / 山海源流 / 太极秘录 / 丝路风语"
+      },
+      {
+        "name": "floor",
+        "type": "integer",
+        "required": true,
+        "description": "层数 1-120"
+      }
+    ]
+  },
+  {
+    "path": "/trial/seasons",
+    "summary": "赛季列表",
+    "category": "试炼之地",
+    "level": 1,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/wicked/records",
+    "summary": "诛恶事件",
+    "category": "诛恶事件",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/sound/converter",
+    "summary": "语音合成",
+    "category": "语音合成",
+    "level": 0,
+    "ticket": false,
+    "params": [
+      {
+        "name": "appkey",
+        "type": "string",
+        "required": true,
+        "description": "阿里云 appkey"
+      },
+      {
+        "name": "access",
+        "type": "string",
+        "required": true,
+        "description": "AccessKeyId"
+      },
+      {
+        "name": "secret",
+        "type": "string",
+        "required": true,
+        "description": "AccessKeySecret"
+      },
+      {
+        "name": "voice",
+        "type": "string",
+        "required": false,
+        "description": "发音人"
+      },
+      {
+        "name": "format",
+        "type": "string",
+        "required": false,
+        "description": "音频编码"
+      },
+      {
+        "name": "sample_rate",
+        "type": "integer",
+        "required": false,
+        "description": "音频采样率"
+      },
+      {
+        "name": "volume",
+        "type": "string",
+        "required": false,
+        "description": "音量"
+      },
+      {
+        "name": "speech_rate",
+        "type": "string",
+        "required": false,
+        "description": "语速"
+      },
+      {
+        "name": "pitch_rate",
+        "type": "string",
+        "required": false,
+        "description": "语调"
+      },
+      {
+        "name": "text",
+        "type": "string",
+        "required": true,
+        "description": "语音内容"
+      }
+    ]
+  },
+  {
+    "path": "/tuilan/achievement",
+    "summary": "资历分布",
+    "category": "资历分布",
+    "level": 2,
+    "ticket": true,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "角色名称"
+      },
+      {
+        "name": "class",
+        "type": "integer",
+        "required": false,
+        "description": "资历分类"
+      },
+      {
+        "name": "subclass",
+        "type": "string",
+        "required": false,
+        "description": "资历子类"
+      }
+    ]
+  },
+  {
+    "path": "/chitu/records",
+    "summary": "今日赤兔",
+    "category": "赤兔查询",
+    "level": 2,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/chitu/week/records",
+    "summary": "本周赤兔",
+    "category": "赤兔查询",
+    "level": 2,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/fenxian/records",
+    "summary": "阵营奉献",
+    "category": "阵营事件",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "阵营名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "显示数量"
+      }
+    ]
+  },
+  {
+    "path": "/sand/records",
+    "summary": "沙盘据点",
+    "category": "阵营沙盘",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      }
+    ]
+  },
+  {
+    "path": "/auction/records",
+    "summary": "阵营拍卖",
+    "category": "阵营竞拍",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "name",
+        "type": "string",
+        "required": false,
+        "description": "物品名称"
+      },
+      {
+        "name": "limit",
+        "type": "integer",
+        "required": false,
+        "description": "限制数量"
+      }
+    ]
+  },
+  {
+    "path": "/ranch/chat",
+    "summary": "马场预告",
+    "category": "马场查询",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      }
+    ]
+  },
+  {
+    "path": "/ranch/records",
+    "summary": "马场事件",
+    "category": "马场查询",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": true,
+        "description": "服务器名称"
+      },
+      {
+        "name": "expired",
+        "type": "integer",
+        "required": false,
+        "description": "是否包含已过期"
+      }
+    ]
+  },
+  {
+    "path": "/fraud/detail",
+    "summary": "骗子查询",
+    "category": "骗子查询",
+    "level": 1,
+    "ticket": false,
+    "params": [
+      {
+        "name": "server",
+        "type": "string",
+        "required": false,
+        "description": "服务器名称"
+      },
+      {
+        "name": "uid",
+        "type": "integer",
+        "required": true,
+        "description": "角色 UID"
+      }
+    ]
+  },
+  {
+    "path": "/saohua/answer",
+    "summary": "答案之书",
+    "category": "骚话语录",
+    "level": 0,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/saohua/content",
+    "summary": "舔狗日志",
+    "category": "骚话语录",
+    "level": 0,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/saohua/context",
+    "summary": "分类语录",
+    "category": "骚话语录",
+    "level": 2,
+    "ticket": false,
+    "params": [
+      {
+        "name": "name",
+        "type": "string",
+        "required": true,
+        "description": "语录分类（疯狂星期四 / 彩虹屁 / 毒鸡汤 / 朋友圈）"
+      }
+    ]
+  },
+  {
+    "path": "/saohua/drink",
+    "summary": "喝什么",
+    "category": "骚话语录",
+    "level": 0,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/saohua/eat",
+    "summary": "吃什么",
+    "category": "骚话语录",
+    "level": 0,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/saohua/random",
+    "summary": "随机骚话",
+    "category": "骚话语录",
+    "level": 0,
+    "ticket": false,
+    "params": []
+  },
+  {
+    "path": "/saohua/zhanan",
+    "summary": "渣男语录",
+    "category": "骚话语录",
+    "level": 0,
+    "ticket": false,
+    "params": []
+  }
+]

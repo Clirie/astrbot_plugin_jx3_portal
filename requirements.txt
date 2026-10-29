@@ -1,0 +1,12 @@
+# 复用 AstrBot 的异步连接池与模板运行环境。
+aiohttp>=3.10,<4
+jinja2>=3.1,<4
+
+beautifulsoup4>=4.12,<5
+Pillow>=10,<13
+
+playwright>=1.40,<2
+
+aiosqlite>=0.20,<1
+
+opencc-python-reimplemented>=0.1.7,<0.2

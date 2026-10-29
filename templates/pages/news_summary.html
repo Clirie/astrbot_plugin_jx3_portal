@@ -1,0 +1,87 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{title}}</title><style>/*__INK_CSS__*/
+* {
+  box-sizing:border-box
+}
+body {
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--body)
+}
+main {
+  position:relative;isolation:isolate;
+  width:1000px;
+  padding:164px 66px 66px
+}
+.meta {
+  display:flex;
+  justify-content:space-between;
+  font-size:23px;
+  color:var(--sub);
+  margin-bottom:22px
+}
+h1 {
+  font-size:39px;
+  line-height:1.4;
+  margin:0;
+  font-weight:500;
+  letter-spacing:-.5px
+}
+header {
+  padding-bottom:24px;
+  border-bottom:2px solid var(--cinnabar)
+}
+.lead {
+  font-size:27px;
+  line-height:1.7;
+  margin:26px 0
+}
+.points {
+  margin:24px 0 30px;
+  padding:20px 0;
+  border-top:1px solid var(--rule);
+  border-bottom:1px solid var(--rule);
+  list-style:none
+}
+.points li {
+  font-size:28px;
+  line-height:1.5;
+  padding:8px 0 8px 23px;
+  position:relative
+}
+.points li:before {
+  content:"";
+  position:absolute;
+  left:0;
+  top:23px;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#985347
+}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 20px}.gallery.single{grid-template-columns:1fr}
+figure {
+  margin:0
+}
+figure:last-child:nth-child(3) {
+  grid-column:1/-1
+}
+img {
+  display:block;
+  width:100%;
+  height:480px;
+  object-fit:contain;
+  background:transparent
+}
+figure:only-child img,figure:last-child:nth-child(3) img {
+  height:auto;
+  max-height:600px
+}
+figcaption {
+  font-size:24px;
+  line-height:1.5;
+  margin-top:12px;
+  color:var(--cinnabar)
+}
+.scene-top{height:420px;opacity:.58}.scene-bottom{height:460px;opacity:.18}header h1{font-size:40px;line-height:1.45}header{border-bottom-width:1px}.meta{font-size:24px}.body{font-size:28px}.body strong,.body b{font-weight:600;color:var(--cinnabar)}
+</style></head><body><main><div class="scene scene-top" aria-hidden="true"></div><div class="scene scene-bottom" aria-hidden="true"></div><header><div class="meta"><span>剑网3资讯</span><time>{{date}}</time></div><h1>{{title}}</h1></header>{% if lead %}<p class="lead">{{lead}}</p>{% endif %}{% if points %}<ul class="points">{% for point in points %}<li>{{point}}</li>{% endfor %}</ul>{% endif %}{% if pictures %}<div class="gallery {{ 'single' if pictures|length==1 else '' }}">{% for picture in pictures %}<figure><img src="{{picture.src}}" alt="">{% if picture.caption %}<figcaption>{{picture.caption}}</figcaption>{% endif %}</figure>{% endfor %}</div>{% endif %}</main></body></html>

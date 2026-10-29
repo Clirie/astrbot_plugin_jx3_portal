@@ -1,0 +1,28 @@
+name: astrbot_plugin_jx3_portal
+display_name: 剑网3百宝箱
+short_desc: JX3API + JX3BOX 查询 · 事件推送 · 付费授权 · 豆包生图 · 可视化后台
+desc: |
+  剑网3百宝箱：接入 JX3API.COM 与 JX3BOX 魔盒，提供日常、开服、金价、沙盘、角色、在线、
+  奇遇、科举、物价、资历、配装、一键宏、交易行等查询；内置完整可视化后台，可填写 JX3API Token
+  与推栏 Ticket、连接事件 WebSocket、管理群聊付费授权与激活码、配置豆包生图、管理指令开关 /
+  冷却 / 权限、查看缓存与请求日志、在线调试 80+ 接口。
+version: 1.4.7
+author: JX3 Portal
+astrbot_version: ">=4.10.0"
+support_platforms:
+  - aiocqhttp
+  - qq_official
+  - weixin_oc
+  - telegram
+  - lark
+  - kook
+tags:
+  - 剑网3
+  - JX3
+  - JX3API
+  - JX3BOX
+  - 游戏查询
+  - 事件推送
+  - 付费授权
+  - 豆包
+  - 后台管理

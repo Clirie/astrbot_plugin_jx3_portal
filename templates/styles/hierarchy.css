@@ -1,0 +1,23 @@
+/* The common query pages share the paper, heading and ledger hierarchy. */
+body.jx3-template:not(.jx3-template--shapan){--jx3-bg:var(--paper);--jx3-text:var(--ink);--jx3-text-secondary:#514c44;--jx3-text-muted:var(--sub);--jx3-gold-bright:var(--cinnabar);--jx3-border-soft:var(--rule);--jx3-border-faint:rgba(117,108,96,.15);--jx3-surface:transparent;--jx3-surface-soft:transparent;--jx3-surface-muted:rgba(220,210,190,.18);--jx3-surface-strong:transparent;--jx3-font:var(--body);--jx3-radius-md:2px;--jx3-shadow-sm:none;--jx3-shadow-md:none;background:var(--paper);font-family:var(--body);padding:0;min-width:0}
+.jx3-template:not(.jx3-template--shapan) .jx3-frame{isolation:isolate;min-height:600px;padding:170px 44px 40px;border:0;background:transparent;box-shadow:none}
+.jx3-template:not(.jx3-template--shapan) .jx3-frame::before{inset:0 0 auto;width:auto;height:500px;border:0;z-index:-1;background:url('ink-asset:ink-background.png') center top / 100% auto no-repeat;mask-image:linear-gradient(black 40%,transparent)}
+.jx3-template:not(.jx3-template--shapan) .jx3-frame::after{inset:auto 0 0;width:auto;height:480px;border:0;z-index:-1;background:url('ink-asset:ink-background.png') center bottom / 100% auto no-repeat;opacity:.22;mask-image:linear-gradient(transparent,black)}
+.jx3-template:not(.jx3-template--shapan) h1{font:400 60px/1.2 var(--brush);letter-spacing:1px;text-align:left;margin:0 0 22px}
+.jx3-template:not(.jx3-template--shapan) :where(.header,.page-header,.section,.panel,.table-wrapper,.table-scroll,.card){border:0;border-radius:0;box-shadow:none;background:transparent}
+.jx3-template:not(.jx3-template--shapan) :where(.header,.page-header){padding:0 0 20px;border-bottom:1px solid var(--rule)}
+.jx3-template:not(.jx3-template--shapan) :where(.section-title,.section-header,.table-title,.summary-title,.data-section__title,.data-subtitle){font-size:30px;font-weight:700;color:var(--cinnabar)}
+.jx3-template:not(.jx3-template--shapan) table{background:transparent;border-radius:0;box-shadow:none}
+.jx3-template:not(.jx3-template--shapan) thead{background:transparent;border-top:0;border-bottom:1px solid var(--cinnabar)}
+.jx3-template:not(.jx3-template--shapan) th{font-size:23px;font-weight:400;color:var(--sub)}
+.jx3-template:not(.jx3-template--shapan) td{font-size:25px;padding:14px 12px}
+.jx3-template:not(.jx3-template--shapan) tbody tr:nth-child(even){background:rgba(220,210,190,.10)}
+.jx3-template:not(.jx3-template--shapan) :where(.data-cell--name,.data-cell--strong,.icon-label){font-weight:600;color:var(--ink)}
+.jx3-template:not(.jx3-template--shapan) :where(.data-cell--score,.data-cell--numeric,.data-cell--rank,.stat-card__value,.price-col){font-family:var(--numbers);font-weight:600}
+.jx3-template:not(.jx3-template--shapan) :where(.data-cell--time,.data-cell--muted,.meta,.data-page__meta,.data-header__meta){font-size:23px;color:var(--sub)}
+.jx3-template:not(.jx3-template--shapan) .data-cell--time{font-family:var(--numbers)}
+.jx3-template:not(.jx3-template--shapan) .stat-card{border:0;border-right:1px solid var(--rule);border-radius:0;background:transparent}
+.jx3-template:not(.jx3-template--shapan) .stat-card:last-child{border-right:0}
+.jx3-template:not(.jx3-template--shapan) .stat-card__label{font-size:23px;color:var(--sub)}
+.jx3-template:not(.jx3-template--shapan) .stat-card__value{font-size:40px}
+.jx3-template:not(.jx3-template--shapan) .jx3-data-time{font:400 21px var(--numbers);margin-top:24px;color:var(--sub)}

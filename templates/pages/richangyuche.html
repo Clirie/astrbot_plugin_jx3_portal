@@ -1,0 +1,118 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>剑网3日常</title><style>
+/*__INK_CSS__*/
+* {
+  box-sizing:border-box
+}
+body {
+  margin:0;
+  color:#293b44;
+  background:#f4f4f0;
+  font-family:"Noto Sans CJK SC","PingFang SC","Microsoft YaHei",sans-serif;
+  font-size:26px;
+  line-height:1.5
+}
+main {
+  position:relative;
+  isolation:isolate;
+  width:1040px;
+  padding:42px 48px
+}
+.scene-top {
+  opacity:.26;
+  height:430px
+}
+header {
+  padding-left:240px;
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  border-bottom:2px solid #345e60;
+  padding-bottom:20px
+}
+h1 {
+  font-family:"Noto Serif CJK SC","Songti SC",serif;
+  font-size:42px;
+  margin:0
+}
+header time {
+  font-size:27px;
+  color:#586974
+}
+.today {
+  padding:25px 0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px 36px
+}
+.today div {
+  display:flex;
+  flex-direction:column;
+  gap:5px
+}
+.today .wide {
+  grid-column:1/-1
+}
+dt {
+  font-size:22px;
+  color:#586974
+}
+dd {
+  font-size:29px;
+  font-weight:550;
+  margin:0
+}
+h2 {
+  font-size:29px;
+  font-weight:600;
+  color:#345e60;
+  margin:15px 0
+}
+table {
+  width:100%;
+  border-collapse:collapse;
+  font-variant-numeric:tabular-nums;
+  font-size:25px
+}
+th {
+  font-size:22px;
+  color:#586974;
+  text-align:left;
+  font-weight:400;
+  padding:10px 10px;
+  border-bottom:1px solid #cbd3d2
+}
+td {
+  padding:18px 10px;
+  border-bottom:1px solid #d7dedb
+}
+th:first-child {
+  width:20%
+}
+th:nth-child(2) {
+  width:48%
+}
+.current {
+  background:rgba(52,94,96,.08);
+  color:#345e60
+}
+.current td:first-child {
+  font-weight:700
+}
+.week {
+  padding-left:10px;
+  font-size:21px;
+  color:#586974
+}
+.weekly {
+  margin-top:28px;
+  border-top:2px solid #345e60;
+  padding-top:12px
+}
+.weekly p {
+  margin:10px 0
+}
+.weekly span {
+  color:#586974;
+  margin-right:16px
+}
+body{background:var(--paper);color:var(--ink);font-family:var(--body)}header{border-color:var(--cinnabar)}h1{font:400 54px/1.25 var(--brush)}h2{font-weight:700;color:var(--cinnabar)}.today dd{font-size:30px;font-weight:600;color:var(--ink)}.today dt,.week,.weekly span{color:var(--sub)}.weekly{border-color:var(--cinnabar)}.current{background:var(--highlight)}th{color:var(--sub);font-weight:400}</style></head><body><main><div class="scene scene-top" aria-hidden="true"></div><header><h1>江湖日常</h1><time>{{ date }}</time></header><dl class="today">{% for label,key in [('大战','war'),('战场','battle'),('矿车','orecar'),('驰援','rescue')] %}{% if today.get(key) %}<div><dt>{{label}}</dt><dd>{{today[key]|replace('大战！','')}}</dd></div>{% endif %}{% endfor %}{% if today.card %}<div class="wide"><dt>秘境</dt><dd>{{ today.card|join('、') }}</dd></div>{% endif %}{% if today.lucky %}<div class="wide"><dt>福缘宠物</dt><dd>{{ today.lucky|join('、') }}</dd></div>{% endif %}</dl>{% if items|length>1 %}<h2>本周日程</h2><table><thead><tr><th>日期</th><th>大战</th><th>战场</th></tr></thead><tbody>{% for day in items %}<tr class="{{'current' if day.is_today else ''}}"><td>{{ day.date[5:]|replace('-','.') }}<span class="week">{{ '今天' if day.is_today else '周'~day.week }}</span></td><td>{{ day.war|replace('大战！','') }}</td><td>{{ day.battle }}</td></tr>{% endfor %}</tbody></table>{% endif %}{% if today.weekly %}<section class="weekly"><h2>本周任务</h2>{% for label,key in [('五人','conn'),('团队','raid')] %}{% if today.weekly.get(key) %}<p><span>{{label}}</span>{{ today.weekly[key]|join('、') if today.weekly[key] is not string else today.weekly[key] }}</p>{% endif %}{% endfor %}</section>{% endif %}</main></body></html>

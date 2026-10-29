@@ -1,0 +1,2614 @@
+[
+  {
+    "key": "game_xingxiashijian_穹野卫",
+    "name": "穹野卫",
+    "category": "日常",
+    "method": "xingxiashijian",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "name": "穹野卫"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "穹野卫",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_xingxiashijian_披风会",
+    "name": "披风会",
+    "category": "日常",
+    "method": "xingxiashijian",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "name": "披风会"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "披风会",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_xingxiashijian_云从社",
+    "name": "云从社",
+    "category": "日常",
+    "method": "xingxiashijian",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "name": "云从社"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "云从社",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_xingxiashijian_楚天社",
+    "name": "楚天社",
+    "category": "日常",
+    "method": "xingxiashijian",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "name": "楚天社"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "楚天社",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_guanaishouling",
+    "name": "关隘",
+    "category": "阵营",
+    "method": "guanaishouling",
+    "params": [],
+    "defaults": {},
+    "fixed": {},
+    "aliases": [
+      "关隘首领"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "关隘",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_benrichitu",
+    "name": "赤兔",
+    "category": "日常",
+    "method": "benrichitu",
+    "params": [],
+    "defaults": {},
+    "fixed": {},
+    "aliases": [
+      "本日赤兔",
+      "今日赤兔"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "赤兔",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_benzhouchitu",
+    "name": "本周赤兔",
+    "category": "日常",
+    "method": "benzhouchitu",
+    "params": [],
+    "defaults": {},
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "本周赤兔",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_zhenyingevent",
+    "name": "阵营奉献",
+    "category": "阵营",
+    "method": "zhenyingevent",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": ""
+    },
+    "fixed": {
+      "limit": 20
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "阵营奉献 [名称]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_yanhuachaxun",
+    "name": "烟花",
+    "category": "角色",
+    "method": "yanhuachaxun",
+    "params": [
+      "server",
+      "name",
+      "limit"
+    ],
+    "defaults": {
+      "server": null,
+      "name": "",
+      "limit": 20
+    },
+    "fixed": {},
+    "aliases": [
+      "烟花记录"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "烟花 服务器 [角色名] [条数]",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_shuma",
+    "name": "刷马",
+    "category": "日常",
+    "method": "shuma",
+    "params": [
+      "server"
+    ],
+    "defaults": {
+      "server": null
+    },
+    "fixed": {},
+    "aliases": [
+      "马场预告"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "刷马 服务器",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_machang",
+    "name": "马场",
+    "category": "日常",
+    "method": "machang",
+    "params": [
+      "server"
+    ],
+    "defaults": {
+      "server": null
+    },
+    "fixed": {
+      "expired": 1
+    },
+    "aliases": [
+      "马场事件",
+      "抓马"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "马场 服务器",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_zhanji",
+    "name": "战绩",
+    "category": "PVP",
+    "method": "zhanji",
+    "params": [
+      "server",
+      "name",
+      "mode"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null,
+      "mode": "33"
+    },
+    "fixed": {},
+    "aliases": [
+      "名剑战绩",
+      "名剑"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "战绩 服务器 角色名 [模式]",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_mingjianpaihang",
+    "name": "名剑排行",
+    "category": "PVP",
+    "method": "mingjianpaihang",
+    "params": [
+      "mode",
+      "limit"
+    ],
+    "defaults": {
+      "mode": "33",
+      "limit": 10
+    },
+    "fixed": {},
+    "aliases": [
+      "竞技场排名"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "名剑排行 [模式] [条数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_mingjiantongji",
+    "name": "名剑统计",
+    "category": "PVP",
+    "method": "mingjiantongji",
+    "params": [
+      "mode"
+    ],
+    "defaults": {
+      "mode": "33"
+    },
+    "fixed": {},
+    "aliases": [
+      "名剑总览"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "名剑统计 [模式]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_kuafumingjian",
+    "name": "跨服名剑",
+    "category": "PVP",
+    "method": "kuafumingjian",
+    "params": [
+      "server",
+      "mode"
+    ],
+    "defaults": {
+      "server": null,
+      "mode": 33
+    },
+    "fixed": {},
+    "aliases": [
+      "跨服名剑排行"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "跨服名剑 服务器 [模式]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_wulinzhengba",
+    "name": "武林争霸",
+    "category": "PVP",
+    "method": "wulinzhengba",
+    "params": [
+      "server",
+      "camp"
+    ],
+    "defaults": {
+      "server": null,
+      "camp": "浩气盟"
+    },
+    "fixed": {},
+    "aliases": [
+      "武林争霸赛"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "武林争霸 服务器 [阵营]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_bukairongyu",
+    "name": "捕快荣誉",
+    "category": "PVP",
+    "method": "bukairongyu",
+    "params": [
+      "server"
+    ],
+    "defaults": {
+      "server": null
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "捕快荣誉 服务器",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_jianghulangke",
+    "name": "江湖浪客",
+    "category": "PVP",
+    "method": "jianghulangke",
+    "params": [
+      "server"
+    ],
+    "defaults": {
+      "server": null
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "江湖浪客 服务器",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_juedoutiaozhan",
+    "name": "决斗挑战",
+    "category": "PVP",
+    "method": "juedoutiaozhan",
+    "params": [
+      "server",
+      "mode"
+    ],
+    "defaults": {
+      "server": null,
+      "mode": "公开"
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "决斗挑战 服务器 [模式]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_rank_statistical_帮会排行",
+    "name": "帮会排行",
+    "category": "排行榜",
+    "method": "rank_statistical",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": "浩气神兵宝甲五十强"
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "帮会排行 服务器 [名称]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_rank_statistical_阵营排行",
+    "name": "阵营排行",
+    "category": "排行榜",
+    "method": "rank_statistical",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": "赛季浩气五十强"
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "阵营排行 服务器 [名称]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_rank_statistical_其他排行",
+    "name": "其他排行",
+    "category": "排行榜",
+    "method": "rank_statistical",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": "名士五十强"
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "其他排行 服务器 [名称]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_shilianpaixing",
+    "name": "试炼排行",
+    "category": "PVE",
+    "method": "shilianpaixing",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "试炼之地"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "试炼排行 服务器 心法",
+    "role_query": false,
+    "kungfu_query": true
+  },
+  {
+    "key": "game_zhengyingpaimai",
+    "name": "阵营拍卖",
+    "category": "阵营",
+    "method": "zhengyingpaimai",
+    "params": [
+      "server",
+      "name",
+      "limit"
+    ],
+    "defaults": {
+      "server": null,
+      "name": "",
+      "limit": 20
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "阵营拍卖 服务器 [名称] [条数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_dilujilu",
+    "name": "的卢",
+    "category": "日常",
+    "method": "dilujilu",
+    "params": [
+      "server"
+    ],
+    "defaults": {
+      "server": null
+    },
+    "fixed": {},
+    "aliases": [
+      "的卢拍卖",
+      "的卢统计"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "的卢 服务器",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_chengbeng",
+    "name": "成本",
+    "category": "交易",
+    "method": "chengbeng",
+    "params": [
+      "server",
+      "Name",
+      "source"
+    ],
+    "defaults": {
+      "server": null,
+      "Name": null,
+      "source": 0
+    },
+    "fixed": {},
+    "aliases": [
+      "配方成本",
+      "成本计算"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "成本 服务器 物品 [来源]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_bianhao",
+    "name": "看号",
+    "category": "交易",
+    "method": "bianhao",
+    "params": [
+      "id"
+    ],
+    "defaults": {
+      "id": null
+    },
+    "fixed": {},
+    "aliases": [
+      "编号搜索"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "看号 编号",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_bangzhanjilu",
+    "name": "帮战",
+    "category": "阵营",
+    "method": "bangzhanjilu",
+    "params": [
+      "server"
+    ],
+    "defaults": {
+      "server": null
+    },
+    "fixed": {},
+    "aliases": [
+      "帮战记录"
+    ],
+    "requires": [],
+    "usage": "帮战 服务器",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_zhueevent",
+    "name": "诛恶",
+    "category": "阵营",
+    "method": "zhueevent",
+    "params": [
+      "server"
+    ],
+    "defaults": {
+      "server": null
+    },
+    "fixed": {
+      "limit": 20
+    },
+    "aliases": [
+      "诛恶事件"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "诛恶 服务器",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_card_remote_名片",
+    "name": "名片",
+    "category": "角色",
+    "method": "card_remote",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "名片记录",
+      "查名片",
+      "角色名片"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "名片 服务器 角色名",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_card_remote_刷新名片",
+    "name": "刷新名片",
+    "category": "角色",
+    "method": "card_remote",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {
+      "force_refresh": true
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "刷新名片 服务器 角色名",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_shuoyoumingpian",
+    "name": "全名片",
+    "category": "角色",
+    "method": "shuoyoumingpian",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "名片历史"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "全名片 服务器 角色名",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_shuijimingpian",
+    "name": "随机秀",
+    "category": "角色",
+    "method": "shuijimingpian",
+    "params": [
+      "server",
+      "force",
+      "body"
+    ],
+    "defaults": {
+      "server": "",
+      "force": "",
+      "body": ""
+    },
+    "fixed": {},
+    "aliases": [
+      "随机名片"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "随机秀 [服务器] [门派] [体型]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_weizuoqiyu",
+    "name": "未出",
+    "category": "奇遇",
+    "method": "weizuoqiyu",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "未出奇遇",
+      "未触发的",
+      "未触发奇遇"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "未出 服务器 角色名",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_qiyuhuizong",
+    "name": "汇总",
+    "category": "奇遇",
+    "method": "qiyuhuizong",
+    "params": [
+      "server",
+      "num"
+    ],
+    "defaults": {
+      "server": null,
+      "num": 7
+    },
+    "fixed": {},
+    "aliases": [
+      "奇遇汇总"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "汇总 服务器 [天数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_jinqiqiyu",
+    "name": "近期",
+    "category": "奇遇",
+    "method": "jinqiqiyu",
+    "params": [
+      "server",
+      "limit"
+    ],
+    "defaults": {
+      "server": null,
+      "limit": 20
+    },
+    "fixed": {},
+    "aliases": [
+      "近期奇遇"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "近期 服务器 [条数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_qiyutongji",
+    "name": "统计",
+    "category": "奇遇",
+    "method": "qiyutongji",
+    "params": [
+      "name",
+      "server",
+      "limit"
+    ],
+    "defaults": {
+      "name": null,
+      "server": "",
+      "limit": 20
+    },
+    "fixed": {},
+    "aliases": [
+      "奇遇统计"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "统计 名称 [服务器] [条数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_jingnai",
+    "name": "精耐",
+    "category": "角色",
+    "method": "jingnai",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "精耐 服务器 角色名",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_baizhan",
+    "name": "百战",
+    "category": "PVE",
+    "method": "baizhan",
+    "params": [],
+    "defaults": {},
+    "fixed": {},
+    "aliases": [
+      "百战首领"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "百战",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_chengjiuchaxun",
+    "name": "成就",
+    "category": "PVE",
+    "method": "chengjiuchaxun",
+    "params": [
+      "server",
+      "role",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "role": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "成就查询"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "成就 服务器 角色名 成就名",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_zhenyan",
+    "name": "阵眼",
+    "category": "PVE",
+    "method": "zhenyan",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "阵眼效果"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "阵眼 心法",
+    "role_query": false,
+    "kungfu_query": true
+  },
+  {
+    "key": "game_zilipaixing",
+    "name": "资历排行",
+    "category": "排行榜",
+    "method": "zilipaixing",
+    "params": [
+      "server",
+      "school"
+    ],
+    "defaults": {
+      "server": "",
+      "school": ""
+    },
+    "fixed": {},
+    "aliases": [
+      "资历榜单",
+      "资历上榜"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "资历排行 [服务器] [门派]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_jineng",
+    "name": "技能",
+    "category": "PVE",
+    "method": "jineng",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {
+      "update": 0
+    },
+    "aliases": [
+      "技能信息"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "技能 心法",
+    "role_query": false,
+    "kungfu_query": true
+  },
+  {
+    "key": "game_qixue",
+    "name": "奇穴",
+    "category": "PVE",
+    "method": "qixue",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {
+      "update": 0
+    },
+    "aliases": [
+      "奇穴信息"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "奇穴 心法",
+    "role_query": false,
+    "kungfu_query": true
+  },
+  {
+    "key": "game_juesheliaotian",
+    "name": "发言",
+    "category": "角色",
+    "method": "juesheliaotian",
+    "params": [
+      "server",
+      "name",
+      "limit",
+      "page"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null,
+      "limit": 20,
+      "page": 1
+    },
+    "fixed": {},
+    "aliases": [
+      "发言记录",
+      "角色聊天",
+      "历史发言"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "发言 服务器 角色名 [条数] [页码]",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_tongzhanyy",
+    "name": "统战",
+    "category": "阵营",
+    "method": "tongzhanyy",
+    "params": [
+      "server"
+    ],
+    "defaults": {
+      "server": ""
+    },
+    "fixed": {},
+    "aliases": [
+      "统战歪歪"
+    ],
+    "requires": [],
+    "usage": "统战 [服务器]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_xiaoyao",
+    "name": "小药",
+    "category": "PVE",
+    "method": "xiaoyao",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": ""
+    },
+    "fixed": {},
+    "aliases": [
+      "小吃小药"
+    ],
+    "requires": [],
+    "usage": "小药 [心法]",
+    "role_query": false,
+    "kungfu_query": true
+  },
+  {
+    "key": "game_pianzhi",
+    "name": "骗子",
+    "category": "交易",
+    "method": "pianzhi",
+    "params": [
+      "uid",
+      "server"
+    ],
+    "defaults": {
+      "uid": null,
+      "server": ""
+    },
+    "fixed": {},
+    "aliases": [
+      "骗子查询"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "骗子 QQ号 [服务器]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_huajia",
+    "name": "花价",
+    "category": "家园",
+    "method": "huajia",
+    "params": [
+      "server",
+      "name",
+      "map"
+    ],
+    "defaults": {
+      "server": null,
+      "name": "",
+      "map": ""
+    },
+    "fixed": {},
+    "aliases": [
+      "家园鲜花"
+    ],
+    "requires": [],
+    "usage": "花价 服务器 [名称] [地图]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_zhuangshi",
+    "name": "装饰",
+    "category": "家园",
+    "method": "zhuangshi",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "家园装饰",
+      "家具"
+    ],
+    "requires": [],
+    "usage": "装饰 名称",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_qiwu",
+    "name": "器物",
+    "category": "家园",
+    "method": "qiwu",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "器物图谱"
+    ],
+    "requires": [],
+    "usage": "器物 名称",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_shitu_拜师",
+    "name": "拜师",
+    "category": "招募",
+    "method": "shitu",
+    "params": [
+      "server",
+      "keyword"
+    ],
+    "defaults": {
+      "server": null,
+      "keyword": ""
+    },
+    "fixed": {
+      "label": 2,
+      "limit": 20
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "拜师 服务器 [关键词]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_shitu_收徒",
+    "name": "收徒",
+    "category": "招募",
+    "method": "shitu",
+    "params": [
+      "server",
+      "keyword"
+    ],
+    "defaults": {
+      "server": null,
+      "keyword": ""
+    },
+    "fixed": {
+      "label": 1,
+      "limit": 20
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "收徒 服务器 [关键词]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_tuanduizhaomu_招募",
+    "name": "招募",
+    "category": "招募",
+    "method": "tuanduizhaomu",
+    "params": [
+      "server",
+      "keyword"
+    ],
+    "defaults": {
+      "server": null,
+      "keyword": ""
+    },
+    "fixed": {
+      "label": 1,
+      "limit": 20
+    },
+    "aliases": [
+      "团队招募"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "招募 服务器 [关键词]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_tuanduizhaomu_团长",
+    "name": "团长",
+    "category": "招募",
+    "method": "tuanduizhaomu",
+    "params": [
+      "server",
+      "keyword"
+    ],
+    "defaults": {
+      "server": null,
+      "keyword": ""
+    },
+    "fixed": {
+      "label": 2,
+      "limit": 20
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "团长 服务器 [关键词]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_tuanduizhaomu_团牌",
+    "name": "团牌",
+    "category": "招募",
+    "method": "tuanduizhaomu",
+    "params": [
+      "server",
+      "keyword"
+    ],
+    "defaults": {
+      "server": null,
+      "keyword": ""
+    },
+    "fixed": {
+      "label": 3,
+      "limit": 20
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "团牌 服务器 [关键词]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_tiebawujia",
+    "name": "贴吧物价",
+    "category": "交易",
+    "method": "tiebawujia",
+    "params": [
+      "name",
+      "server",
+      "limit"
+    ],
+    "defaults": {
+      "name": null,
+      "server": "",
+      "limit": 10
+    },
+    "fixed": {},
+    "aliases": [
+      "外观记录"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "贴吧物价 名称 [服务器] [条数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_bagua",
+    "name": "818",
+    "category": "资讯",
+    "method": "bagua",
+    "params": [
+      "server",
+      "limit"
+    ],
+    "defaults": {
+      "server": "",
+      "limit": 10
+    },
+    "fixed": {
+      "tags": "818"
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "818 [服务器] [条数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_jiemi",
+    "name": "解密",
+    "category": "日常",
+    "method": "jiemi",
+    "params": [],
+    "defaults": {},
+    "fixed": {},
+    "aliases": [
+      "秘境方位"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "解密",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_diaoluo",
+    "name": "掉落",
+    "category": "PVE",
+    "method": "diaoluo",
+    "params": [
+      "name",
+      "server",
+      "limit"
+    ],
+    "defaults": {
+      "name": null,
+      "server": "",
+      "limit": 20
+    },
+    "fixed": {},
+    "aliases": [
+      "掉落统计"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "掉落 名称 [服务器] [条数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_fubengjilu",
+    "name": "副本",
+    "category": "PVE",
+    "method": "fubengjilu",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "副本CD",
+      "副本cd",
+      "团本CD",
+      "团本cd"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "副本 服务器 角色名",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_trial_seasons",
+    "name": "试炼赛季",
+    "category": "PVE",
+    "method": "trial_seasons",
+    "params": [],
+    "defaults": {},
+    "fixed": {},
+    "aliases": [
+      "赛季列表"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "试炼赛季",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_trial_bosses",
+    "name": "试炼首领",
+    "category": "PVE",
+    "method": "trial_bosses",
+    "params": [
+      "season",
+      "floor"
+    ],
+    "defaults": {
+      "season": "",
+      "floor": 1
+    },
+    "fixed": {},
+    "aliases": [
+      "试炼攻略",
+      "秒伤计算"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "试炼首领 [赛季] [层数]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_trade_item_search",
+    "name": "外观别名",
+    "category": "交易",
+    "method": "trade_item_search",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [
+      "外观搜索"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "外观别名 名称",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_trade_item_records",
+    "name": "外观成交",
+    "category": "交易",
+    "method": "trade_item_records",
+    "params": [
+      "name",
+      "server"
+    ],
+    "defaults": {
+      "name": null,
+      "server": ""
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "外观成交 名称 [服务器]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_event_strategy",
+    "name": "日常攻略",
+    "category": "日常",
+    "method": "event_strategy",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "日常攻略 名称",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_skill_calculate",
+    "name": "急速计算",
+    "category": "PVE",
+    "method": "skill_calculate",
+    "params": [
+      "cooldown"
+    ],
+    "defaults": {
+      "cooldown": 1.5
+    },
+    "fixed": {},
+    "aliases": [
+      "加速"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "急速计算 [技能间隔]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_school_search",
+    "name": "配装榜",
+    "category": "PVE",
+    "method": "school_search",
+    "params": [
+      "kungfu",
+      "mode"
+    ],
+    "defaults": {
+      "kungfu": null,
+      "mode": ""
+    },
+    "fixed": {},
+    "aliases": [
+      "配装排行榜",
+      "配装搜索"
+    ],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "配装榜 心法 [模式]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "game_card_preset",
+    "name": "名片预设",
+    "category": "角色",
+    "method": "card_preset",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token",
+      "ticket"
+    ],
+    "usage": "名片预设 服务器 角色名",
+    "role_query": true,
+    "kungfu_query": false
+  },
+  {
+    "key": "team_create",
+    "name": "开团",
+    "usage": "开团 团名 25人 今晚八点",
+    "category": "团队",
+    "aliases": [
+      "创建团队",
+      "团队创建"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_open",
+    "name": "打开报名",
+    "usage": "打开报名",
+    "category": "团队",
+    "aliases": [
+      "开报名"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_close",
+    "name": "关闭报名",
+    "usage": "关闭报名",
+    "category": "团队",
+    "aliases": [
+      "关闭报警",
+      "关报名"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_end",
+    "name": "结束团队",
+    "usage": "结束团队 团编号",
+    "category": "团队",
+    "aliases": [
+      "解散团队"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_end_all",
+    "name": "结束全部团队",
+    "usage": "结束全部团队",
+    "category": "团队",
+    "aliases": [
+      "解散全部"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_clear",
+    "name": "清空报名",
+    "usage": "清空报名 团编号",
+    "category": "团队",
+    "aliases": [
+      "清空团队"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_signup",
+    "name": "报名",
+    "usage": "报名 心法 角色名",
+    "category": "团队",
+    "aliases": [
+      "组队报名",
+      "团队报名"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_cancel",
+    "name": "取消报名",
+    "usage": "取消报名",
+    "category": "团队",
+    "aliases": [
+      "退团报名",
+      "团队退出"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_view",
+    "name": "查看团队",
+    "usage": "团队",
+    "category": "团队",
+    "aliases": [
+      "团队列表",
+      "团队",
+      "团队详情",
+      "团队明细"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_update",
+    "name": "修改报名",
+    "usage": "修改报名 团编号 原角色名 新角色名 心法 [老板]",
+    "category": "团队",
+    "aliases": [
+      "改报名"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_swap",
+    "name": "交换位置",
+    "usage": "交换位置 团编号 位置1 位置2",
+    "category": "团队",
+    "aliases": [
+      "换位",
+      "团队移动"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_rules",
+    "name": "查看限制",
+    "usage": "查看限制 默认10/默认25/团编号",
+    "category": "团队",
+    "aliases": [
+      "报名限制"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_rule_add",
+    "name": "添加限制",
+    "usage": "添加限制 团编号 职责/心法 目标 最少 最多",
+    "category": "团队",
+    "aliases": [
+      "加限制"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_rule_edit",
+    "name": "修改限制",
+    "usage": "修改限制 团编号 规则编号 职责/心法 目标 最少 最多",
+    "category": "团队",
+    "aliases": [
+      "改限制"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_rule_delete",
+    "name": "删除限制",
+    "usage": "删除限制 团编号 规则编号",
+    "category": "团队",
+    "aliases": [
+      "删限制"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_rule_reset",
+    "name": "恢复默认限制",
+    "usage": "恢复默认限制 团编号",
+    "category": "团队",
+    "aliases": [
+      "重置限制"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "role_bind",
+    "name": "绑定角色",
+    "usage": "绑定角色 服务器 角色名",
+    "category": "绑定",
+    "aliases": [
+      "绑定角色名"
+    ],
+    "requires": [
+      "token"
+    ],
+    "local": true
+  },
+  {
+    "key": "role_unbind",
+    "name": "解绑角色",
+    "usage": "解绑角色 服务器 角色名",
+    "category": "绑定",
+    "aliases": [
+      "解绑角色名"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "role_list",
+    "name": "我的角色",
+    "usage": "我的角色",
+    "category": "绑定",
+    "aliases": [
+      "角色列表",
+      "绑定列表"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "bind_server",
+    "name": "绑定区服",
+    "usage": "绑定区服 服务器",
+    "category": "绑定",
+    "aliases": [
+      "设置区服",
+      "绑定"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "unbind_server",
+    "name": "解绑区服",
+    "usage": "解绑区服",
+    "category": "绑定",
+    "aliases": [
+      "清除区服",
+      "解绑"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "bilei_view",
+    "name": "避雷查看",
+    "usage": "避雷查看",
+    "category": "避雷",
+    "aliases": [
+      "避雷列表"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "bilei_search",
+    "name": "避雷查询",
+    "usage": "避雷查询 名称",
+    "category": "避雷",
+    "aliases": [
+      "查避雷"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "bilei_add",
+    "name": "避雷添加",
+    "usage": "避雷添加 名称 备注",
+    "category": "避雷",
+    "aliases": [
+      "添加避雷"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "bilei_edit",
+    "name": "避雷修改",
+    "usage": "避雷修改 编号 备注",
+    "category": "避雷",
+    "aliases": [
+      "修改避雷"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "bilei_delete",
+    "name": "避雷删除",
+    "usage": "避雷删除 编号",
+    "category": "避雷",
+    "aliases": [
+      "删除避雷"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "tarot",
+    "name": "塔罗",
+    "aliases": [
+      "塔罗牌",
+      "抽塔罗"
+    ],
+    "usage": "塔罗 [问题]",
+    "category": "休闲",
+    "requires": [],
+    "play": true
+  },
+  {
+    "key": "tarot_three",
+    "name": "塔罗三张",
+    "aliases": [
+      "三张塔罗",
+      "塔罗牌阵"
+    ],
+    "usage": "塔罗三张 [问题]",
+    "category": "休闲",
+    "requires": [],
+    "play": true
+  },
+  {
+    "key": "tarot_daily",
+    "name": "今日塔罗",
+    "aliases": [
+      "日塔罗",
+      "每日塔罗"
+    ],
+    "usage": "今日塔罗",
+    "category": "休闲",
+    "requires": [],
+    "play": true
+  },
+  {
+    "key": "horoscope",
+    "name": "今日运势",
+    "aliases": [
+      "星座",
+      "星座运势",
+      "运势",
+      "今日运气"
+    ],
+    "usage": "今日运势 [星座]",
+    "category": "休闲",
+    "requires": [],
+    "play": true
+  },
+  {
+    "key": "fortune",
+    "name": "生辰八字",
+    "aliases": [
+      "八字",
+      "命格签"
+    ],
+    "usage": "生辰八字 [公历日期 时间 性别]",
+    "category": "休闲",
+    "requires": [],
+    "play": true
+  },
+  {
+    "key": "ziwei",
+    "name": "紫微斗数",
+    "aliases": [
+      "紫微"
+    ],
+    "usage": "紫微斗数 公历日期 时间 性别",
+    "category": "休闲",
+    "requires": [],
+    "play": true
+  },
+  {
+    "key": "love",
+    "name": "恋爱书",
+    "aliases": [
+      "恋爱之书",
+      "恋爱占卜",
+      "桃花运"
+    ],
+    "usage": "恋爱书",
+    "category": "休闲",
+    "requires": [],
+    "play": true
+  },
+  {
+    "key": "show_server",
+    "name": "区服查询",
+    "aliases": [
+      "我的区服",
+      "当前区服",
+      "查询区服"
+    ],
+    "usage": "区服查询",
+    "category": "绑定",
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "game_map_events",
+    "name": "地图活动",
+    "category": "日常",
+    "method": "xingxiashijian",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "地图活动 势力名称",
+    "role_query": false
+  },
+  {
+    "key": "game_rank_all",
+    "name": "排行统计",
+    "category": "排行榜",
+    "method": "rank_statistical",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "排行统计 服务器 榜单名称",
+    "role_query": false
+  },
+  {
+    "key": "game_mentor_list",
+    "name": "师徒列表",
+    "category": "招募",
+    "method": "shitu",
+    "params": [
+      "server",
+      "label",
+      "keyword"
+    ],
+    "defaults": {
+      "server": null,
+      "label": "拜师",
+      "keyword": ""
+    },
+    "fixed": {
+      "limit": 20
+    },
+    "aliases": [
+      "找师徒",
+      "拜师收徒",
+      "师徒大厅"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "师徒列表 服务器 [拜师或收徒] [关键词]",
+    "role_query": false
+  },
+  {
+    "key": "game_tieba_posts",
+    "name": "百度贴吧",
+    "category": "资讯",
+    "method": "bagua",
+    "params": [
+      "server",
+      "tags"
+    ],
+    "defaults": {
+      "server": "",
+      "tags": ""
+    },
+    "fixed": {
+      "limit": 6
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "百度贴吧 [服务器] [关键词]",
+    "role_query": false
+  },
+  {
+    "key": "game_role_monster",
+    "name": "角色百战",
+    "category": "PVE",
+    "method": "role_monster",
+    "params": [
+      "server",
+      "name",
+      "keyword",
+      "page"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null,
+      "keyword": "全部",
+      "page": 1
+    },
+    "fixed": {},
+    "aliases": [
+      "精耐统计"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "角色百战 服务器 角色名 [技能名] [页码]",
+    "role_query": true
+  },
+  {
+    "key": "game_card_cached",
+    "name": "名片缓存",
+    "category": "角色",
+    "method": "card_cached",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "名片缓存 服务器 角色名",
+    "role_query": true
+  },
+  {
+    "key": "game_equipment",
+    "name": "装备属性",
+    "category": "角色",
+    "method": "equipment",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {
+      "mode": "attribute"
+    },
+    "aliases": [
+      "属性",
+      "装备查询"
+    ],
+    "requires": [
+      "token"
+    ],
+    "usage": "装备属性 服务器 角色名",
+    "role_query": true
+  },
+  {
+    "key": "game_equipment_detail",
+    "name": "装备详情",
+    "category": "角色",
+    "method": "equipment",
+    "params": [
+      "server",
+      "name",
+      "kungfu",
+      "kind"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null,
+      "kungfu": null,
+      "kind": "秘境挑战"
+    },
+    "fixed": {
+      "mode": "detail"
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "装备详情 服务器 角色名 心法 [类型]",
+    "role_query": true
+  },
+  {
+    "key": "game_equipment_records",
+    "name": "装备记录",
+    "category": "角色",
+    "method": "equipment",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {
+      "mode": "records"
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "装备记录 服务器 角色名",
+    "role_query": true
+  },
+  {
+    "key": "game_words_answer",
+    "name": "答案之书",
+    "category": "休闲",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "answer"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "答案之书"
+  },
+  {
+    "key": "game_words_content",
+    "name": "舔狗日志",
+    "category": "休闲",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "content"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "舔狗日志"
+  },
+  {
+    "key": "game_words_context",
+    "name": "分类语录",
+    "category": "休闲",
+    "method": "words",
+    "params": [
+      "name"
+    ],
+    "defaults": {
+      "name": null
+    },
+    "fixed": {
+      "kind": "context"
+    },
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "分类语录 分类名称"
+  },
+  {
+    "key": "game_words_drink",
+    "name": "喝什么",
+    "category": "休闲",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "drink"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "喝什么"
+  },
+  {
+    "key": "game_words_eat",
+    "name": "吃什么",
+    "category": "休闲",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "eat"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "吃什么"
+  },
+  {
+    "key": "game_words_random",
+    "name": "随机骚话",
+    "category": "休闲",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "random"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "随机骚话"
+  },
+  {
+    "key": "game_words_zhanan",
+    "name": "渣男语录",
+    "category": "休闲",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "zhanan"
+    },
+    "aliases": [],
+    "requires": [],
+    "usage": "渣男语录"
+  },
+  {
+    "key": "caihongpi",
+    "name": "彩虹屁",
+    "aliases": [
+      "夸夸我"
+    ],
+    "category": "休闲",
+    "usage": "彩虹屁",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "context",
+      "name": "彩虹屁"
+    },
+    "requires": [
+      "token"
+    ]
+  },
+  {
+    "key": "dujitang",
+    "name": "毒鸡汤",
+    "aliases": [
+      "毒汤"
+    ],
+    "category": "休闲",
+    "usage": "毒鸡汤",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "context",
+      "name": "毒鸡汤"
+    },
+    "requires": [
+      "token"
+    ]
+  },
+  {
+    "key": "pengyouquan",
+    "name": "朋友圈",
+    "aliases": [
+      "朋友圈文案"
+    ],
+    "category": "休闲",
+    "usage": "朋友圈",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "context",
+      "name": "朋友圈"
+    },
+    "requires": [
+      "token"
+    ]
+  },
+  {
+    "key": "fkxq4",
+    "name": "疯狂星期四",
+    "aliases": [
+      "肯德基",
+      "KFC"
+    ],
+    "category": "休闲",
+    "usage": "疯狂星期四",
+    "method": "words",
+    "params": [],
+    "defaults": {},
+    "fixed": {
+      "kind": "context",
+      "name": "疯狂星期四"
+    },
+    "requires": [
+      "token"
+    ]
+  },
+  {
+    "key": "team_leader",
+    "name": "设置团长",
+    "aliases": [],
+    "category": "团队",
+    "usage": "设置团长 团队号 角色名",
+    "local": true,
+    "requires": []
+  },
+  {
+    "key": "team_note",
+    "name": "团队备注",
+    "aliases": [
+      "团队公告"
+    ],
+    "category": "团队",
+    "usage": "团队备注 团队号 备注",
+    "local": true,
+    "requires": []
+  },
+  {
+    "key": "game_role_history",
+    "name": "角色历史",
+    "method": "role_history",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "category": "角色",
+    "aliases": [
+      "改名记录",
+      "帮会历史"
+    ],
+    "requires": [
+      "token"
+    ],
+    "role_query": true,
+    "kungfu_query": false,
+    "usage": "角色历史 服务器 角色名"
+  },
+  {
+    "key": "game_battleground",
+    "name": "战场",
+    "method": "activity",
+    "params": [
+      "num"
+    ],
+    "defaults": {
+      "num": 0
+    },
+    "fixed": {
+      "category": "battle"
+    },
+    "category": "日常",
+    "aliases": [],
+    "requires": [],
+    "role_query": false,
+    "kungfu_query": false,
+    "usage": "战场 [未来天数]"
+  },
+  {
+    "key": "game_dungeon_daily",
+    "name": "大战",
+    "method": "activity",
+    "params": [
+      "num"
+    ],
+    "defaults": {
+      "num": 0
+    },
+    "fixed": {
+      "category": "war"
+    },
+    "category": "日常",
+    "aliases": [],
+    "requires": [],
+    "role_query": false,
+    "kungfu_query": false,
+    "usage": "大战 [未来天数]"
+  },
+  {
+    "key": "game_pet_forecast",
+    "name": "宠物预测",
+    "method": "activity",
+    "params": [
+      "num"
+    ],
+    "defaults": {
+      "num": 6
+    },
+    "fixed": {
+      "category": "lucky"
+    },
+    "category": "日常",
+    "aliases": [
+      "福缘宠物"
+    ],
+    "requires": [],
+    "role_query": false,
+    "kungfu_query": false,
+    "usage": "宠物预测 [未来天数]"
+  },
+  {
+    "key": "game_mine_daily",
+    "name": "矿车",
+    "method": "activity",
+    "params": [
+      "num"
+    ],
+    "defaults": {
+      "num": 0
+    },
+    "fixed": {
+      "category": "orecar"
+    },
+    "category": "日常",
+    "aliases": [],
+    "requires": [],
+    "role_query": false,
+    "kungfu_query": false,
+    "usage": "矿车 [未来天数]"
+  },
+  {
+    "key": "game_event_count",
+    "name": "奇遇收集",
+    "method": "event_count",
+    "params": [
+      "server",
+      "name"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null
+    },
+    "fixed": {},
+    "category": "奇遇",
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "role_query": true,
+    "kungfu_query": false,
+    "usage": "奇遇收集 服务器 角色名"
+  },
+  {
+    "key": "team_count",
+    "name": "团队人数",
+    "usage": "团队人数 团编号",
+    "category": "团队",
+    "aliases": [],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_kungfu",
+    "name": "团队心法统计",
+    "usage": "团队心法统计 团编号",
+    "category": "团队",
+    "aliases": [],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_rename",
+    "name": "团队改名",
+    "usage": "团队改名 团编号 新团名",
+    "category": "团队",
+    "aliases": [],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "role_clear",
+    "name": "解绑全部角色",
+    "usage": "解绑全部角色",
+    "category": "绑定",
+    "aliases": [],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "game_recipe",
+    "name": "配方",
+    "category": "PVE",
+    "method": "recipe",
+    "params": [
+      "server",
+      "name",
+      "source"
+    ],
+    "defaults": {
+      "server": null,
+      "name": null,
+      "source": 0
+    },
+    "fixed": {},
+    "aliases": [],
+    "requires": [
+      "token"
+    ],
+    "usage": "配方 服务器 物品 [来源]",
+    "role_query": false,
+    "kungfu_query": false
+  },
+  {
+    "key": "team_formation",
+    "name": "阵容",
+    "usage": "阵容",
+    "category": "团队",
+    "aliases": [
+      "团队阵容"
+    ],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_signup_menu",
+    "name": "选择报名",
+    "usage": "报名",
+    "category": "团队",
+    "aliases": [],
+    "requires": [],
+    "local": true
+  },
+  {
+    "key": "team_roster",
+    "name": "团队名单",
+    "usage": "团队名单",
+    "category": "团队",
+    "aliases": [],
+    "requires": [],
+    "local": true
+  }
+]

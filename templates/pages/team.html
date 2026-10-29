@@ -1,0 +1,34 @@
+{# template-title: 团队信息 #}
+{% macro role_icon(role) %}<svg class="role-icon" viewBox="0 0 20 20" aria-hidden="true">{% if role == 'T' %}<path d="M10 2 17 5v5c0 4-7 8-7 8S3 14 3 10V5Z" fill="currentColor"/>{% elif role == '奶' %}<path d="M7 2h6v5h5v6h-5v5H7v-5H2V7h5Z" fill="currentColor"/>{% elif role == '老板' %}<path d="m2 5 4 4 4-6 4 6 4-4-2 11H4Z" fill="currentColor"/>{% else %}<path d="m4 2 3 1 9 10-3 3L3 6Zm8 12 4-4 2 2-6 6-2-2Z" fill="currentColor"/>{% endif %}</svg>{% endmacro %}
+{% macro person(member, compact=false) %}
+<div class="team-person" data-role="{{ member.visual_role }}">
+    <div class="team-person-name">{% if icons.sect.get(member.kungfu) %}<img src="{{ icons.sect[member.kungfu] }}" alt="">{% endif %}<strong>{{ member.display_name }}</strong></div>
+    <div class="team-person-role">{{ role_icon(member.visual_role) }}<span>{{ {'T':'坦克','奶':'治疗','DPS':'输出'}.get(member.visual_role,member.visual_role) }}</span><b>{{ member.kungfu }}</b></div>
+    {% if member.server and member.server != team.common_server %}<p class="team-person-server">{{ member.server }}</p>{% endif %}
+</div>
+{% endmacro %}
+<div class="container team-page">
+{% if mode == 'list' %}
+    <header class="team-heading"><div><p class="team-kicker">团队招募</p><h1>一起出发</h1></div><div class="team-count"><b>{{ teams|length }}</b><span>个团队</span></div></header>
+    {% for item in teams %}
+    <section class="team-list-item"><div><span class="team-kicker">#{{ item.id }} · {{ '报名中' if item.registration_open else '暂停报名' }}</span><h2>{{ item.name }}</h2>{% if item.announcement %}<p>{{ item.announcement }}</p>{% endif %}</div><strong>{{ item.member_count }}<small> / {{ item.capacity }} 人</small></strong></section>
+    {% else %}<p class="team-empty">还没有团队</p>{% endfor %}
+{% else %}
+    <header class="team-heading team-heading--detail">
+        <div class="team-title-line"><h1>{{ team.name }}</h1><span class="team-attendance"><b>{{ team.member_count }}</b> / {{ team.capacity }} 人</span></div>
+        <p class="team-status">{{ '报名中' if team.registration_open else '暂停报名' }}{% if team.member_count == team.capacity %} · 已满员{% endif %}<span>团队 #{{ team.id }}</span></p>
+    </header>
+    <div class="team-brief">{% if team.announcement %}<strong>{{ team.announcement }}</strong>{% endif %}{% if team.leader_name %}<span>团长 {{ team.leader_name }}</span>{% endif %}{% if team.common_server %}<span>{{ team.common_server }}</span>{% endif %}</div>
+    {% if mode == 'formation' %}
+    <div class="team-composition">{% for role,count in team.counts.items() %}{% if role != '老板' or count %}<span data-role="{{ {'坦克':'T','治疗':'奶','输出':'DPS'}.get(role,role) }}">{{ role_icon({'坦克':'T','治疗':'奶','输出':'DPS'}.get(role,role)) }}{{ role }} <b>{{ count }}</b></span>{% endif %}{% endfor %}{% if team.member_count < team.capacity %}<span class="team-vacancies">空位 <b>{{ team.capacity-team.member_count }}</b></span>{% endif %}</div>
+    <div class="team-squads">{% for squad in team.squads %}<section class="team-squad"><h2>第{{ ['一','二','三','四','五'][loop.index0] }}小队</h2>{% for member in squad %}<div class="team-position{% if not member %} team-position--empty{% endif %}">{% if member %}{{ person(member,true) }}{% else %}<span class="team-position-empty">待报名</span>{% endif %}</div>{% endfor %}</section>{% endfor %}</div>
+    {% elif team.roster %}
+    <div class="team-roster-groups">{% for group in team.groups %}{% if group.members %}
+    <section class="team-group team-group--{{ group.kind }}"><h2><span>{{ group.label }}</span><b>{{ group.members|length }}<small>人</small></b></h2>
+    <div class="team-group-members">{% for member in group.members %}<div class="team-member">
+    {% if icons.sect.get(member.kungfu) %}<img src="{{ icons.sect[member.kungfu] }}" alt="">{% else %}<span class="team-icon-letter">{{ member.kungfu[0] }}</span>{% endif %}
+    <div><strong>{{ member.display_name }}</strong><p>{{ member.kungfu }}{% if member.server and member.server != team.common_server %}<span> · {{ member.server }}</span>{% endif %}</p></div>
+    </div>{% endfor %}</div></section>{% endif %}{% endfor %}</div>
+    {% else %}<p class="team-empty">等待队友加入</p>{% endif %}
+{% endif %}
+</div>

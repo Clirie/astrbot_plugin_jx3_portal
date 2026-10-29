@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="light" name="color-scheme"/>
+<link href="./assets/img/jx3.ico" rel="icon"/>
+<title>剑网3百宝箱 · 后台管理</title>
+<link href="./style.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+<div class="brand">
+<div class="brand-mark"><svg fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24"><path d="m12 3 9 5-9 5-9-5 9-5Z"></path><path d="M3 8v9l9 5 9-5V8M12 13v9"></path></svg></div>
+<div class="brand-text">
+<div class="brand-title">剑网3百宝箱</div>
+<div class="brand-sub">JX3 PORTAL · ADMIN</div>
+</div>
+</div>
+<nav class="nav" id="nav"><div class="nav-group-label">工作台</div><button class="nav-item is-active" data-tab="overview">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><rect height="7" rx="1" width="7" x="3" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="3"></rect><rect height="7" rx="1" width="7" x="3" y="14"></rect><rect height="7" rx="1" width="7" x="14" y="14"></rect></svg></span><span>概览</span>
+</button><button class="nav-item" data-tab="commands">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="m5 5 7 7-7 7M14 19h6"></path></svg></span><span>指令管理</span>
+</button><button class="nav-item" data-tab="styles">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><rect height="7" width="7" x="3" y="3" rx="1.5"></rect><rect height="7" width="7" x="14" y="3" rx="1.5"></rect><rect height="7" width="7" x="3" y="14" rx="1.5"></rect><rect height="7" width="7" x="14" y="14" rx="1.5"></rect></svg></span><span>名片模板</span>
+</button><button class="nav-item" data-tab="events">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"></path></svg></span><span>事件推送</span>
+</button><div class="nav-group-label">配置</div><button class="nav-item" data-tab="config">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="M4 7h16M4 17h16"></path><circle cx="8" cy="7" fill="currentColor" r="3"></circle><circle cx="16" cy="17" fill="currentColor" r="3"></circle></svg></span><span>接口配置</span>
+</button><button class="nav-item" data-tab="aliases">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="M12 21s7-7 7-12a7 7 0 0 0-14 0c0 5 7 12 7 12Z"></path><circle cx="12" cy="9" r="2"></circle></svg></span><span>区服别名</span>
+</button><button class="nav-item" data-tab="paid">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><rect height="14" rx="2" width="18" x="3" y="5"></rect><path d="M3 10h18M7 15h3"></path></svg></span><span>付费授权</span>
+</button><div class="nav-group-label">维护</div><button class="nav-item" data-tab="logs">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><rect height="18" rx="2" width="16" x="4" y="3"></rect><path d="M8 8h8M8 12h8M8 16h5"></path></svg></span><span>缓存与日志</span>
+</button><button class="nav-item" data-tab="debug">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="m8 6-6 6 6 6M16 6l6 6-6 6M14 3l-4 18"></path></svg></span><span>接口调试</span>
+</button><button class="nav-item" data-tab="system">
+<span aria-hidden="true" class="nav-icon"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 10v7M12 6v1"></path></svg></span><span>系统信息</span>
+</button></nav>
+<div class="sidebar-foot">
+<div class="side-status" id="sideStatus">
+<span class="dot"></span>
+<span>正在连接</span>
+</div>
+<div class="side-version" id="sideVersion">v1.0.0</div>
+</div>
+</aside>
+<main class="main">
+<header class="topbar">
+<div class="page-head">
+<div class="page-kicker" id="pageKicker">JX3 PORTAL</div>
+<h1 id="pageTitle">概览</h1>
+<p id="pageSubtitle">JX3API 与 JX3BOX 运行状态</p>
+</div>
+<div class="topbar-actions">
+<span class="conn-pill" id="connPill"><span class="dot"></span>在线</span>
+<button class="btn ghost" id="refreshBtn" type="button">刷新</button>
+</div>
+</header>
+<div class="loading-panel" id="loading">
+<div class="spinner"></div>
+<div>
+<strong>正在读取后台数据</strong>
+<span></span>
+</div>
+</div>
+<div class="fatal-panel" hidden="" id="fatal">
+<div class="fatal-icon">!</div>
+<h2>后台加载失败</h2>
+<p id="fatalText">请从 AstrBot WebUI 的插件详情页打开此页面。</p>
+<button class="btn ghost" id="fatalRetry" type="button">重试</button>
+</div>
+<div hidden="" id="content">
+<!-- ============================================================ 概览 -->
+<section class="page" data-page="overview"><div class="overview-actions">
+<button class="btn primary" id="testAllBtn" type="button">检测连接</button>
+<button class="btn ghost" id="clearCacheBtn" type="button">清理缓存</button>
+<button class="btn ghost" id="openConfigBtn" type="button">接口设置</button>
+</div>
+<div class="stat-grid">
+<article class="stat-card">
+<div class="stat-label">上游请求</div>
+<div class="stat-value" id="statRequests">0</div>
+<div class="stat-sub" id="statRequestsSub">JX3API + JX3BOX</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">成功率</div>
+<div class="stat-value" id="statSuccess">—</div>
+<div class="stat-sub" id="statSuccessSub">暂无请求</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">缓存命中率</div>
+<div class="stat-value" id="statCache">—</div>
+<div class="stat-sub" id="statCacheSub">0 条缓存</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">运行时长</div>
+<div class="stat-value" id="statUptime">—</div>
+<div class="stat-sub" id="statUptimeSub">本次启动</div>
+</article>
+</div>
+
+<div class="grid overview-grid"><article class="card">
+<header class="card-head">
+<div>
+<h3>请求记录</h3>
+<p>最近 8 条请求与错误记录。</p>
+</div>
+<button class="btn tiny ghost" id="overviewLogsBtn" type="button">查看全部</button>
+</header>
+<div class="activity-list" id="recentLogs"></div>
+</article>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>数据源连接</h3>
+<p>分别检测 JX3API、Token、推栏 Ticket 与 JX3BOX。</p>
+</div>
+<button class="btn tiny ghost" id="refreshHealth" type="button">刷新</button>
+</header>
+<div class="health-list" id="healthList"></div>
+</article>
+
+</div>
+<article class="card token-status-card">
+<header class="card-head">
+<div>
+<h3>JX3API 用量</h3>
+<p>当前令牌的使用情况。</p>
+</div>
+<div class="head-actions">
+<label class="inline-check">
+<input checked="" id="tokenAutoRefresh" type="checkbox"/>
+<span>自动刷新（60 秒）</span>
+</label>
+<button class="btn tiny ghost" id="refreshTokenBtn" type="button">刷新</button>
+</div>
+</header>
+<div class="token-grid">
+<div class="token-cell">
+<span>令牌等级</span>
+<strong id="tokenLevel">—</strong>
+</div>
+<div class="token-cell">
+<span>已用次数</span>
+<strong id="tokenUsed">—</strong>
+</div>
+<div class="token-cell">
+<span>剩余次数</span>
+<strong id="tokenRemaining">—</strong>
+</div>
+<div class="token-cell">
+<span>令牌状态</span>
+<strong id="tokenValid">未获取</strong>
+</div>
+</div>
+<div class="token-foot" id="tokenUpdated">点击刷新读取 JX3API 令牌用量</div>
+</article>
+<article class="card onboarding" id="onboarding">
+<header class="card-head">
+<div>
+<h3>快速开始</h3>
+<p>三步完成配置，然后在群里发送「剑三」。</p>
+</div>
+</header>
+<div class="steps" id="onboardingSteps"></div>
+</article>
+</section>
+<!-- ============================================================ 配置 -->
+<section class="page" data-page="config" hidden="">
+<form autocomplete="off" id="configForm">
+<article class="card section-card">
+<header class="card-head">
+<div>
+<h3>JX3API.COM</h3>
+<p>Token 决定会员接口权限；免费接口无需 Token。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" data-test="connect" type="button">测试连接</button>
+<button class="btn tiny ghost" data-test="token" type="button">测试 Token</button>
+</div>
+</header>
+<div class="form-grid">
+<label class="field span-2">
+<span class="field-label">
+                      JX3API Token
+                      <a href="https://www.jx3api.com" rel="noopener" target="_blank">前往获取</a>
+</span>
+<div class="secret-row">
+<input data-setting="jx3api.token" id="tokenInput" placeholder="粘贴 Token，留空表示不修改" spellcheck="false" type="password"/>
+<button class="btn tiny ghost" data-toggle-secret="tokenInput" type="button">显示</button>
+<button class="btn tiny danger" data-clear-secret="jx3api_token" type="button">清除</button>
+</div>
+<span class="field-hint" id="tokenHint">未配置</span>
+</label>
+<label class="field">
+<span class="field-label">API 地址</span>
+<input data-setting="jx3api.base_url" placeholder="https://www.jx3api.com" type="url"/>
+<span class="field-hint">一般无需修改。</span>
+</label>
+<label class="field">
+<span class="field-label">默认区服</span>
+<input data-setting="admin.default_server" list="serverOptions" placeholder="例如：梦江南" type="text"/>
+<span class="field-hint">未指定区服的指令会使用它。</span>
+</label>
+<label class="field">
+<span class="field-label">请求超时（秒）</span>
+<input data-setting="jx3api.timeout" max="180" min="3" step="1" type="number"/>
+</label>
+<label class="field">
+<span class="field-label">失败重试次数</span>
+<input data-setting="jx3api.retries" max="5" min="0" step="1" type="number"/>
+<span class="field-hint">仅超时与 5xx 会重试。</span>
+</label>
+<label class="field">
+<span class="field-label">接口缓存（秒）</span>
+<input data-setting="jx3api.cache_ttl" max="86400" min="0" step="10" type="number"/>
+<span class="field-hint">0 表示关闭缓存。</span>
+</label>
+</div>
+</article>
+<article class="card section-card ticket-card">
+<header class="card-head">
+<div>
+<h3>推栏 Ticket</h3>
+<p>名剑、名片、门派、资历等接口需要推栏登录凭证。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" data-test="ticket" type="button">检测 Ticket</button>
+</div>
+</header>
+<div class="form-grid">
+<label class="field span-2">
+<span class="field-label">
+                      推栏 Ticket
+                      <span class="inline-pill" id="ticketState">未配置</span>
+</span>
+<textarea data-setting="jx3api.ticket" id="ticketInput" placeholder="粘贴 ticket=... 后面的值；也可以直接粘贴整段 Cookie" rows="3" spellcheck="false"></textarea>
+<span class="field-hint" id="ticketHint">Ticket 会过期，失效后重新抓包即可。后台只显示掩码。</span>
+</label>
+</div>
+<details class="guide">
+<summary>如何获取推栏 Ticket？</summary>
+<div class="guide-body">
+<ol>
+<li>手机安装「推栏」App 并登录剑网3账号。</li>
+<li>用抓包工具（Reqable / Stream）抓取推栏 HTTPS 请求。</li>
+<li>在请求头 Cookie 或 URL 参数中找到 <code>ticket=...</code>，复制等号后面的值。</li>
+<li>粘贴到上面输入框，保存后点击「检测 Ticket」。</li>
+</ol>
+<p class="warn-text">Ticket 等同于推栏登录态，请勿发给他人。它和 JX3API Token 是两种不同的凭证，都需要填写。</p>
+</div>
+</details>
+</article>
+<article class="card section-card">
+<header class="card-head">
+<div>
+<h3>JX3BOX 魔盒</h3>
+<p>配装、一键宏与交易行数据源，公开接口通常无需额外密钥。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" data-test="jx3box" type="button">测试 JX3BOX</button>
+</div>
+</header>
+<div class="form-grid">
+<label class="field">
+<span class="field-label">客户端</span>
+<select data-setting="jx3box.client">
+<option value="std">正式服 std</option>
+<option value="origin">缘起服 origin</option>
+</select>
+</label>
+<label class="field">
+<span class="field-label">配装装等</span>
+<input data-setting="jx3box.global_level" max="999" min="1" step="1" type="number"/>
+<span class="field-hint">随赛季调整，默认 130。</span>
+</label>
+<label class="field">
+<span class="field-label">请求超时（秒）</span>
+<input data-setting="jx3box.timeout" max="180" min="3" step="1" type="number"/>
+</label>
+<label class="field">
+<span class="field-label">缓存时间（秒）</span>
+<input data-setting="jx3box.cache_ttl" max="86400" min="0" step="60" type="number"/>
+</label>
+</div>
+<div class="fixed-box">
+<div class="fixed-title">JX3BOX 地址已固定在代码中，无需修改</div>
+<div class="fixed-address"><span>CMS</span><code>https://cms.jx3box.com</code></div>
+<div class="fixed-address"><span>NODE</span><code>https://node.jx3box.com</code></div>
+<div class="fixed-address"><span>交易行</span><code>https://next2.jx3box.com</code></div>
+</div>
+</article>
+<article class="card section-card">
+<header class="card-head">
+<div>
+<h3>角色在线</h3>
+<p>JX3API 没有在线接口；这里接入第三方在线服务（如池清川分析器）。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" data-test="online" type="button">测试在线查询</button>
+</div>
+</header>
+<div class="form-grid">
+<label class="field span-2">
+<span class="field-label">第三方在线接口地址</span>
+<input data-setting="online.api_url" placeholder="例如：https://your-online.example.com 或完整 /role_online 地址" type="text"/>
+<span class="field-hint">只填域名会自动拼接 /role_online；也可以直接填完整接口地址。</span>
+</label>
+<label class="field span-2">
+<span class="field-label">
+                      在线查询令牌
+                      <span class="inline-pill" id="onlineTokenState">未配置</span>
+</span>
+<div class="secret-row">
+<input data-setting="online.token" id="onlineTokenInput" placeholder="第三方服务自己的 token" spellcheck="false" type="password"/>
+<button class="btn tiny ghost" data-toggle-secret="onlineTokenInput" type="button">显示</button>
+<button class="btn tiny danger" data-clear-secret="online_api_token" type="button">清除</button>
+</div>
+<span class="field-hint" id="onlineTokenHint">该令牌与 JX3API Token 不同，由第三方在线服务提供。</span>
+</label>
+<label class="field">
+<span class="field-label">测试区服</span>
+<input id="onlineTestServer" placeholder="梦江南" type="text"/>
+</label>
+<label class="field">
+<span class="field-label">测试角色</span>
+<input id="onlineTestName" placeholder="张三" type="text"/>
+</label>
+</div>
+</article>
+<article class="card section-card">
+<header class="card-head">
+<div>
+<h3>豆包生图（火山方舟）</h3>
+<p>配置后可使用「生图」「图生图」指令，支持 Seedream / SeedEdit 模型。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" data-test="doubao" type="button">测试 Key</button>
+</div>
+</header>
+<div class="form-grid">
+<label class="field span-2">
+<span class="field-label">
+                      豆包 API Key
+                      <a href="https://console.volcengine.com/ark" rel="noopener" target="_blank">火山方舟控制台</a>
+</span>
+<div class="secret-row">
+<input data-setting="doubao.api_key" id="doubaoKeyInput" placeholder="火山方舟 API Key" spellcheck="false" type="password"/>
+<button class="btn tiny ghost" data-toggle-secret="doubaoKeyInput" type="button">显示</button>
+<button class="btn tiny danger" data-clear-secret="doubao_api_key" type="button">清除</button>
+</div>
+<span class="field-hint" id="doubaoKeyHint">未配置</span>
+</label>
+<label class="field">
+<span class="field-label">API 地址</span>
+<input data-setting="doubao.base_url" placeholder="https://ark.cn-beijing.volces.com/api/v3" type="url"/>
+</label>
+<label class="field">
+<span class="field-label">模型 ID</span>
+<input data-setting="doubao.model" placeholder="doubao-seedream-5-0-flash-260915" type="text"/>
+</label>
+<label class="field">
+<span class="field-label">图片尺寸</span>
+<input data-setting="doubao.size" placeholder="1024x1024 或 2K" type="text"/>
+</label>
+<label class="field">
+<span class="field-label">生成超时（秒）</span>
+<input data-setting="doubao.timeout" max="300" min="10" step="10" type="number"/>
+</label>
+<label class="check-line span-2">
+<input data-setting="doubao.watermark" type="checkbox"/>
+<span>生成图片添加水印</span>
+</label>
+</div>
+</article>
+<article class="card section-card">
+<header class="card-head">
+<div>
+<h3>后台设置</h3>
+<p>日志只保留在内存中，重启插件后清空。</p>
+</div>
+</header>
+<div class="form-grid">
+<label class="field">
+<span class="field-label">日志保留条数</span>
+<input data-setting="admin.log_limit" max="1000" min="50" step="50" type="number"/>
+</label>
+</div>
+</article>
+<div class="savebar">
+<div class="savebar-text" id="configDirty">所有修改需点击保存</div>
+<div class="savebar-actions">
+<button class="btn ghost" id="reloadConfigBtn" type="button">还原</button>
+<button class="btn primary" id="saveConfigBtn" type="button">保存配置</button>
+</div>
+</div>
+</form>
+</section>
+<!-- ============================================================ 指令 -->
+<section class="page" data-page="commands" hidden="">
+<article class="card">
+<header class="card-head">
+<div>
+<h3>聊天指令</h3>
+<p>按功能筛选指令，修改后统一保存。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" id="enableAllBtn" type="button">全部启用</button>
+<button class="btn tiny ghost" id="disableAllBtn" type="button">全部关闭</button>
+<button class="btn tiny danger" id="resetCommandsBtn" type="button">恢复默认</button>
+</div>
+</header>
+<div class="toolbar">
+<input id="commandSearch" placeholder="搜索指令、别名或说明…" type="search"/>
+<select id="commandCategory">
+<option value="all">全部分类</option>
+</select>
+<span class="toolbar-count" id="commandCount">0 个指令</span>
+</div>
+<div class="table-wrap command-scroll">
+<table class="data-table command-table">
+<thead>
+<tr>
+<th>启用</th>
+<th>指令</th>
+<th>说明</th>
+<th>权限</th>
+<th>冷却（秒）</th>
+</tr>
+</thead>
+<tbody id="commandRows"></tbody>
+</table>
+</div>
+<div class="savebar inline">
+<div class="savebar-text" id="commandDirty">修改后需保存</div>
+<button class="btn primary" id="saveCommandsBtn" type="button">保存指令配置</button>
+</div>
+</article>
+</section>
+<!-- ============================================================ 区服别名 -->
+<section class="page" data-page="aliases" hidden="">
+<div class="grid two">
+<article class="card">
+<header class="card-head">
+<div>
+<h3>区服别名</h3>
+<p>把群内简称解析成正式区服名，例如「双梦 → 梦江南」。保存后立即对所有查询指令生效。</p>
+</div>
+</header>
+<div class="form-grid">
+<label class="field">
+<span class="field-label">正式区服</span>
+<select id="aliasServer"></select>
+</label>
+<label class="field">
+<span class="field-label">新增别名</span>
+<input id="aliasValue" placeholder="例如：双梦 / 华乾" type="text"/>
+</label>
+</div>
+<div class="head-actions" style="margin-top: 14px">
+<button class="btn primary" id="addAliasBtn" type="button">添加到该区服</button>
+<button class="btn ghost" id="resetAliasesBtn" type="button">恢复默认</button>
+</div>
+</article>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>默认区服</h3>
+<p>未在指令中填写区服时使用；同样支持别名解析。</p>
+</div>
+</header>
+<label class="field">
+<span class="field-label">默认区服</span>
+<input id="aliasDefaultServer" list="serverOptions" placeholder="例如：梦江南" type="text"/>
+<span class="field-hint">修改后点下方「保存别名与默认区服」。</span>
+</label>
+</article>
+</div>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>别名表</h3>
+<p>每个区服一行，多个别名用逗号分隔；留空表示没有别名。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" id="reloadAliasesBtn" type="button">刷新</button>
+</div>
+</header>
+<div class="table-wrap">
+<table class="data-table">
+<thead>
+<tr>
+<th>正式区服</th>
+<th>大区</th>
+<th>别名（逗号分隔）</th>
+</tr>
+</thead>
+<tbody id="aliasRows"></tbody>
+</table>
+</div>
+<div class="savebar inline">
+<div class="savebar-text" id="aliasDirty">修改后点击保存</div>
+<button class="btn primary" id="saveAliasesBtn" type="button">保存别名与默认区服</button>
+</div>
+</article>
+</section>
+<!-- ============================================================ 名片模板 -->
+<section class="page" data-page="styles" hidden="">
+<div class="card">
+<header class="card-head">
+<div>
+<h3>名片生图模板</h3>
+<p>「名片生图」指令的风格模板。用户在聊天里回复序号即可选择；这里可以修改提示词、启用/停用、新增或删除。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" id="reloadCardStylesBtn" type="button">刷新</button>
+<button class="btn tiny ghost" id="resetCardStylesBtn" type="button">恢复默认</button>
+</div>
+</header>
+<div class="table-wrap">
+<table class="data-table">
+<thead>
+<tr>
+<th style="width:150px">模板名</th>
+<th style="width:100px">序号</th>
+<th style="width:60px">启用</th>
+<th>提示词（支持 {force} {body} {name}）</th>
+<th style="width:150px">尺寸 生成→压缩</th>
+<th style="width:70px">操作</th>
+</tr>
+</thead>
+<tbody id="cardStyleRows"></tbody>
+</table>
+</div>
+<div class="savebar inline">
+<div class="savebar-text" id="cardStyleDirty">修改后点击保存</div>
+<button class="btn ghost" id="addCardStyleBtn" type="button">＋ 新增模板</button>
+<button class="btn primary" id="saveCardStylesBtn" type="button">保存模板</button>
+</div>
+</div>
+</section>
+<!-- ============================================================ 事件 -->
+<section class="page" data-page="events" hidden="">
+<div class="stat-grid compact">
+<article class="stat-card">
+<div class="stat-label">通道状态</div>
+<div class="stat-value" id="eventStatStatus">—</div>
+<div class="stat-sub" id="eventStatStatusSub">未连接</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">已选事件</div>
+<div class="stat-value" id="eventStatActions">0</div>
+<div class="stat-sub">免费 + 令牌事件</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">目标会话</div>
+<div class="stat-value" id="eventStatSessions">0</div>
+<div class="stat-sub">接收推送的群 / 私聊</div>
+</article>
+</div>
+<div class="grid two">
+<article class="card">
+<header class="card-head">
+<div>
+<h3>事件通道</h3>
+<p>JX3API WebSocket 事件地址与令牌。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" id="reloadEventsBtn" type="button">重连</button>
+</div>
+</header>
+<div class="form-grid">
+<label class="check-line span-2">
+<input data-setting="event_push.enabled" type="checkbox"/>
+<span>启用事件推送（保存后自动重连）</span>
+</label>
+<label class="field span-2">
+<span class="field-label">WebSocket 地址</span>
+<input data-setting="event_push.wss_url" placeholder="wss://socket.nicemoe.cn" spellcheck="false" type="text"/>
+<span class="field-hint">默认 wss://socket.nicemoe.cn，后续变更可直接在这里改。</span>
+</label>
+<label class="field span-2">
+<span class="field-label">
+                      事件推送令牌
+                      <span class="inline-pill" id="eventTokenState">复用 JX3API Token</span>
+</span>
+<div class="secret-row">
+<input data-setting="event_push.token" id="eventTokenInput" placeholder="留空自动复用 JX3API Token" spellcheck="false" type="password"/>
+<button class="btn tiny ghost" data-toggle-secret="eventTokenInput" type="button">显示</button>
+<button class="btn tiny danger" data-clear-secret="event_push_token" type="button">清除</button>
+</div>
+<span class="field-hint" id="eventTokenHint">留空时使用上方「接口配置」里的 JX3API Token。</span>
+</label>
+<div class="field span-2">
+<span class="field-label">运行状态</span>
+<div class="event-status-line" id="eventStatusText">尚未加载</div>
+</div>
+</div>
+</article>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>目标会话</h3>
+<p>每行一个 AstrBot 会话 ID；群聊可发送「推送 开启」自动加入。</p>
+</div>
+</header>
+<label class="field">
+<span class="field-label">会话 ID 列表</span>
+<textarea data-setting="event_push.sessions" id="eventSessions" placeholder="aiocqhttp:GroupMessage:123456
+telegram:GroupMessage:-100123456" rows="9"></textarea>
+<span class="field-hint">留空表示不向任何会话推送；事件推送仍会保持连接。</span>
+</label>
+</article>
+</div>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>会话订阅状态</h3>
+<p>选择一个会话，查看并修改该会话全部事件的开启 / 关闭状态；用户在群里发「推送列表」也能看到同一份状态。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny primary" id="saveEventSessionBtn" type="button">保存会话订阅</button>
+</div>
+</header>
+<div class="form-grid">
+<label class="field">
+<span class="field-label">会话</span>
+<select id="eventSessionSelect"></select>
+<span class="field-hint">列表包含后台目标会话和用户主动订阅过的会话。</span>
+</label>
+</div>
+<div class="table-wrap event-table-wrap" style="margin-top: 12px">
+<table class="data-table event-table">
+<thead>
+<tr><th>开启</th><th>编号</th><th>事件中文名</th><th>类型</th></tr>
+</thead>
+<tbody id="eventSessionRows"></tbody>
+</table>
+</div>
+</article>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>推送事件</h3>
+<p>免费事件无需额外权限；令牌事件在付费授权开启时只发给有效群。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" id="eventSelectFreeBtn" type="button">全选免费</button>
+<button class="btn tiny ghost" id="eventSelectAllBtn" type="button">全选</button>
+<button class="btn tiny ghost" id="eventSelectNoneBtn" type="button">清空</button>
+</div>
+</header>
+<div class="table-wrap event-table-wrap">
+<table class="data-table event-table">
+<thead>
+<tr>
+<th>启用</th>
+<th>编号</th>
+<th>事件中文名</th>
+<th>对应接口</th>
+<th>类型</th>
+</tr>
+</thead>
+<tbody id="eventActionGrid"></tbody>
+</table>
+</div>
+<div class="savebar inline">
+<div class="savebar-text" id="eventDirty">修改后点击保存并重连</div>
+<button class="btn primary" id="saveEventsBtn" type="button">保存并重连</button>
+</div>
+</article>
+<article class="card notice-card">
+<h3>事件通道说明</h3>
+<p>
+                事件推送依赖 AstrBot 自带的 aiohttp。连接成功后，插件会按上方事件选择向目标会话发送中文事件卡片；
+                付费授权开启时，1001~1122 等令牌事件只推送给授权有效的群，2001~2006 免费事件不受限制。
+              </p>
+</article>
+</section>
+<!-- ============================================================ 付费 -->
+<section class="page" data-page="paid" hidden="">
+<div class="stat-grid compact">
+<article class="stat-card">
+<div class="stat-label">授权群聊</div>
+<div class="stat-value" id="paidGroupCount">0</div>
+<div class="stat-sub" id="paidGroupSub">白名单总数</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">有效授权</div>
+<div class="stat-value" id="paidActiveCount">0</div>
+<div class="stat-sub">未到期且启用</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">未使用激活码</div>
+<div class="stat-value" id="paidUnusedCodes">0</div>
+<div class="stat-sub">可发给用户激活</div>
+</article>
+</div>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>付费查询模式</h3>
+<p>开启后，标记为「付费」的指令只对有效授权群开放；关闭则全部免费。</p>
+</div>
+</header>
+<div class="form-grid">
+<label class="check-line span-2">
+<input data-setting="paid.enabled" type="checkbox"/>
+<span>启用付费授权闸门（关闭后所有查询免费）</span>
+</label>
+</div>
+<div class="head-actions" style="margin-top: 14px">
+<button class="btn primary" id="savePaidModeBtn" type="button">保存模式</button>
+</div>
+</article>
+<div class="grid two">
+<article class="card">
+<header class="card-head">
+<div>
+<h3>添加 / 更新群授权</h3>
+<p>手动把群加入白名单，设置到期时间或立即停用。</p>
+</div>
+</header>
+<div class="form-grid">
+<label class="field span-2">
+<span class="field-label">会话 ID</span>
+<input id="paidGroupSession" placeholder="aiocqhttp:GroupMessage:123456" type="text"/>
+</label>
+<label class="field">
+<span class="field-label">备注</span>
+<input id="paidGroupNote" placeholder="例如：亲友群 / 测试群" type="text"/>
+</label>
+<label class="field">
+<span class="field-label">到期日期</span>
+<input id="paidGroupExpires" type="date"/>
+</label>
+<label class="check-line span-2">
+<input checked="" id="paidGroupActive" type="checkbox"/>
+<span>立即启用（取消勾选 = 停用但保留记录）</span>
+</label>
+</div>
+<div class="head-actions" style="margin-top: 14px">
+<button class="btn primary" id="savePaidGroupBtn" type="button">保存授权</button>
+</div>
+</article>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>生成激活码</h3>
+<p>一次性使用；用户在群里发送「激活 JX3-XXXX-XXXX-XXXX」。</p>
+</div>
+</header>
+<div class="form-grid">
+<label class="field">
+<span class="field-label">授权天数</span>
+<input id="paidCodeDays" max="3650" min="1" step="1" type="number" value="30"/>
+</label>
+<label class="field">
+<span class="field-label">生成数量</span>
+<input id="paidCodeCount" max="100" min="1" step="1" type="number" value="5"/>
+</label>
+<label class="field span-2">
+<span class="field-label">备注</span>
+<input id="paidCodeNote" placeholder="例如：10 月活动 / 亲友团" type="text"/>
+</label>
+</div>
+<div class="head-actions" style="margin-top: 14px">
+<button class="btn primary" id="generateCodesBtn" type="button">生成激活码</button>
+<button class="btn tiny ghost" id="refreshPaidBtn" type="button">刷新授权数据</button>
+</div>
+</article>
+</div>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>群聊白名单</h3>
+<p>到期后自动失效；可续期 30 天或立即停用。</p>
+</div>
+</header>
+<div class="table-wrap">
+<table class="data-table">
+<thead>
+<tr>
+<th>会话 ID</th>
+<th>备注</th>
+<th>到期时间</th>
+<th>状态</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody id="paidGroupRows"></tbody>
+</table>
+</div>
+</article>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>激活码</h3>
+<p>激活码只显示在后台，复制后发给群管理员。</p>
+</div>
+</header>
+<div class="table-wrap">
+<table class="data-table">
+<thead>
+<tr>
+<th>激活码</th>
+<th>天数</th>
+<th>状态</th>
+<th>使用会话</th>
+<th>创建时间</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody id="paidCodeRows"></tbody>
+</table>
+</div>
+</article>
+</section>
+<!-- ============================================================ 日志 -->
+<section class="page" data-page="logs" hidden="">
+<div class="stat-grid compact">
+<article class="stat-card">
+<div class="stat-label">缓存条数</div>
+<div class="stat-value" id="cacheEntries">0</div>
+<div class="stat-sub" id="cacheLimit">上限 800</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">缓存命中率</div>
+<div class="stat-value" id="cacheHitRate">—</div>
+<div class="stat-sub" id="cacheHits">命中 0 / 未命中 0</div>
+</article>
+<article class="stat-card">
+<div class="stat-label">日志条数</div>
+<div class="stat-value" id="logCount">0</div>
+<div class="stat-sub">内存环形缓冲</div>
+</article>
+</div>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>缓存分区</h3>
+<p>JX3API 与 JX3BOX 的缓存可以分别清理。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" data-clear-cache="jx3api" type="button">清 JX3API</button>
+<button class="btn tiny ghost" data-clear-cache="jx3box" type="button">清 JX3BOX</button>
+<button class="btn tiny danger" data-clear-cache="all" type="button">全部清理</button>
+</div>
+</header>
+<div class="table-wrap">
+<table class="data-table">
+<thead>
+<tr>
+<th>命名空间</th>
+<th>条数</th>
+<th>命中</th>
+<th>未命中</th>
+<th>命中率</th>
+</tr>
+</thead>
+<tbody id="cacheRows"></tbody>
+</table>
+</div>
+</article>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>请求日志</h3>
+<p>仅记录接口路径与状态，不会记录 Token / Ticket。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" id="refreshLogsBtn" type="button">刷新</button>
+<button class="btn tiny danger" id="clearLogsBtn" type="button">清空日志</button>
+</div>
+</header>
+<div class="toolbar">
+<select id="logLevel">
+<option value="all">全部级别</option>
+<option value="info">info</option>
+<option value="warn">warn</option>
+<option value="error">error</option>
+</select>
+<input id="logSearch" placeholder="搜索来源或内容…" type="search"/>
+<span class="toolbar-count" id="logResultCount">0 条</span>
+</div>
+<div class="table-wrap">
+<table class="data-table log-table">
+<thead>
+<tr>
+<th>时间</th>
+<th>级别</th>
+<th>来源</th>
+<th>内容</th>
+<th>耗时</th>
+</tr>
+</thead>
+<tbody id="logRows"></tbody>
+</table>
+</div>
+</article>
+</section>
+<!-- ============================================================ 调试 -->
+<section class="page" data-page="debug" hidden="">
+<div class="debug-layout">
+<article class="card debug-side">
+<header class="card-head">
+<div>
+<h3>接口目录</h3>
+<p id="endpointTotal">0 个 JX3API 接口</p>
+</div>
+</header>
+<input id="endpointSearch" placeholder="搜索路径、名称或分类…" type="search"/>
+<div class="endpoint-list" id="endpointList"></div>
+</article>
+<article class="card debug-main">
+<header class="card-head">
+<div>
+<h3>请求调试</h3>
+<p>直接调用 JX3API，按接口等级自动附加 Token / Ticket。</p>
+</div>
+<a class="btn tiny ghost" href="https://www.jx3api.com/openapi" rel="noopener" target="_blank">官方文档</a>
+</header>
+<div class="debug-form">
+<label class="field grow">
+<span class="field-label">接口路径</span>
+<input id="debugPath" placeholder="/active/calendar" spellcheck="false" type="text"/>
+</label>
+<label class="field">
+<span class="field-label">鉴权</span>
+<select id="debugAuth">
+<option value="auto">自动（按接口）</option>
+<option value="none">不附加</option>
+<option value="token">仅 Token</option>
+<option value="both">Token + Ticket</option>
+</select>
+</label>
+<button class="btn primary" id="debugSendBtn" type="button">发送请求</button>
+</div>
+<div class="endpoint-meta" id="endpointMeta"></div>
+<div class="param-grid" id="paramFields"></div>
+<div class="response-head">
+<div>
+<strong>响应</strong>
+<span id="debugStatus">尚未发送</span>
+</div>
+<button class="btn tiny ghost" id="copyResponseBtn" type="button">复制 JSON</button>
+</div>
+<pre class="code-block" id="debugResponse">选择左侧接口，或直接输入路径后发送。</pre>
+</article>
+</div>
+</section>
+<!-- ============================================================ 系统 -->
+<section class="page" data-page="system" hidden="">
+<div class="grid two">
+<article class="card">
+<header class="card-head">
+<div>
+<h3>运行环境</h3>
+<p>插件版本与进程信息。</p>
+</div>
+</header>
+<dl class="info-list" id="systemInfo"></dl>
+</article>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>统计</h3>
+<p>本次启动以来的调用统计。</p>
+</div>
+<button class="btn tiny danger" id="resetStatsBtn" type="button">重置统计</button>
+</header>
+<dl class="info-list" id="systemStats"></dl>
+<div class="timing-heading"><h4>回复耗时</h4><p>每条指令最近 200 次 · 按 P95 排序</p></div>
+<div class="table-wrap">
+<table aria-label="指令回复耗时" class="data-table timing-table">
+<thead><tr><th scope="col">指令</th><th scope="col">中位数</th><th scope="col">P95</th><th scope="col">次数</th></tr></thead>
+<tbody id="commandTimings"></tbody>
+</table>
+</div>
+</article>
+</div>
+<article class="card">
+<header class="card-head">
+<div>
+<h3>导出配置</h3>
+<p>导出的 JSON 不包含 Token / Ticket 明文，可安全备份或分享。</p>
+</div>
+<div class="head-actions">
+<button class="btn tiny ghost" id="exportBtn" type="button">生成导出</button>
+<button class="btn tiny ghost" id="copyExportBtn" type="button">复制</button>
+</div>
+</header>
+<pre class="code-block" id="exportBox">点击「生成导出」查看配置摘要。</pre>
+</article>
+<article class="card notice-card">
+<h3>安全说明</h3>
+<p>
+                后台页面运行在 AstrBot WebUI 的插件视图 iframe 中，访问权限由 AstrBot 登录态保护。
+                插件 API 不会向前端返回 Token / Ticket 明文；日志只记录接口路径，不记录查询串。
+              </p>
+</article>
+</section>
+</div>
+</main>
+</div>
+<datalist id="serverOptions"></datalist>
+<div class="toast-stack" id="toastStack"></div>
+<div class="modal" hidden="" id="modal">
+<div aria-labelledby="modalTitle" aria-modal="true" class="modal-card" role="dialog">
+<h3 id="modalTitle">确认操作</h3>
+<p id="modalBody"></p>
+<div class="modal-actions">
+<button class="btn ghost" id="modalCancel" type="button">取消</button>
+<button class="btn danger-solid" id="modalOk" type="button">确定</button>
+</div>
+</div>
+</div>
+<script src="./app.js" type="module"></script>
+</body>
+</html>

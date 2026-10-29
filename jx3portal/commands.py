@@ -1,0 +1,1339 @@
+"""Chat command catalog and dispatch.
+
+``main.py`` only registers thin AstrBot handlers; all parsing, permission,
+cooldown and API work lives here so it can be tested without AstrBot.
+
+Commands are deliberately keyword based (``角色 梦江南 张三``) instead of using
+AstrBot's typed parameters: role names may contain spaces and 心法/物品 names
+are free-form, so parsing the remaining message text ourselves is more robust.
+"""
+
+from __future__ import annotations
+
+import asyncio
+import math
+import re
+from pathlib import Path
+from datetime import date, timedelta
+import time
+from dataclasses import dataclass
+from typing import Any, Awaitable, Callable
+
+from .card_styles import CardStyleStore
+
+from . import assets, format as fmt
+from .replies import ImageReply, MessageParts, PendingReply
+from .buttons import Button, MenuReply
+from .game.market import MarketService
+from .game.utils import format_time
+from .game.catalog import GAME_COMMANDS, GAME_MAP
+from .game.service import GameService, GameUsageError
+from .http import HttpError, NetworkError
+from .jx3api import (
+    JX3APIError,
+    JX3APIClient,
+    MissingCredential,
+    describe_jx3_error,
+)
+from .aliases import ServerAliasService
+from .doubao import DoubaoClient, DoubaoError
+from .event_catalog import EVENT_NAMES
+from .event_push import event_catalog
+from .render import ImageRenderer, RenderError
+from .jx3box import JX3BOXClient, JX3BOXError
+from .online import OnlineError, OnlineService
+from .paid import PaidError, PaidService
+from .settings import Settings
+from .telemetry import Telemetry
+from .tuilan import TICKET_GUIDE, TuilanService
+
+
+@dataclass(frozen=True)
+class CommandSpec:
+    key: str
+    name: str
+    aliases: tuple[str, ...]
+    usage: str
+    description: str
+    category: str
+    admin_only: bool = False
+    cooldown: int = 3
+    requires: tuple[str, ...] = ()
+
+    @property
+    def paid(self) -> bool:
+        return self.key in PAID_COMMAND_KEYS
+
+
+PAID_COMMAND_KEYS = frozenset(
+    {
+        "gold",
+        "sand",
+        "role",
+        "events",
+        "strategy",
+        "trade",
+        "trade_select",
+        "achievement",
+        "builds",
+        "macro",
+        "auction",
+        "online",
+        "image",
+        "image_edit",
+        "card_ai",
+    }
+)
+
+
+COMMANDS: tuple[CommandSpec, ...] = (
+    CommandSpec(
+        "help",
+        "剑三",
+        ("jx3", "剑网3", "剑三帮助", "j3", "功能", "菜单", "帮助"),
+        "剑三 [指令]",
+        "查看功能菜单或某个指令的详细用法",
+        "基础",
+        cooldown=1,
+    ),
+    CommandSpec(
+        "calendar",
+        "日常",
+        ("日历", "活动日历"),
+        "日常 [天数偏移]",
+        "今天的日常、大战、战场、矿车与周常",
+        "日常",
+    ),
+    CommandSpec(
+        "server",
+        "开服",
+        ("服务器", "区服状态", "区服", "大区状态"),
+        "开服 [区服]",
+        "查询全区服开服 / 维护状态",
+        "日常",
+    ),
+    CommandSpec(
+        "gold",
+        "金价",
+        ("金币", "金价行情"),
+        "金价 [区服]",
+        "贴吧 / 万宝楼 / DD373 金币比价",
+        "交易",
+        requires=('token',),
+    ),
+    CommandSpec(
+        "sand",
+        "沙盘",
+        ("阵营沙盘", "沙盘据点"),
+        "沙盘 [区服]",
+        "阵营沙盘据点归属与帮会信息",
+        "阵营",
+        cooldown=5,
+        requires=('token',),
+    ),
+    CommandSpec(
+        "role",
+        "角色",
+        ("查角色", "角色详情"),
+        "角色 <区服> <角色名>",
+        "角色门派、体型、帮会、阵营与 ID",
+        "角色",
+        requires=('token',),
+    ),
+    CommandSpec(
+        "events",
+        "奇遇",
+        ("奇遇记录", "查询"),
+        "奇遇 <区服> <角色名>",
+        "角色已触发的奇遇记录",
+        "角色",
+        cooldown=5,
+        requires=('token',),
+    ),
+    CommandSpec(
+        "strategy",
+        "奇遇攻略",
+        ("攻略",),
+        "奇遇攻略 <奇遇名>",
+        "查询奇遇的触发条件与攻略信息",
+        "角色",
+    ),
+    CommandSpec(
+        "exam",
+        "科举",
+        ("科举答案",),
+        "科举 <题目>",
+        "搜索科举考试题目答案",
+        "日常",
+    ),
+    CommandSpec(
+        "trade",
+        "物价",
+        ("物品价格", "外观价格"),
+        "物价 <物品名> [区服]",
+        "外观报价、万宝楼在售与历史走势",
+        "交易",
+        cooldown=5,
+        requires=('token',),
+    ),
+    CommandSpec(
+        "achievement",
+        "资历",
+        ("资历分布",),
+        "资历 <区服> <角色名>",
+        "角色资历分布（需要推栏 Ticket）",
+        "角色",
+        cooldown=8,
+        requires=('token', 'ticket'),
+    ),
+    CommandSpec(
+        "news",
+        "新闻",
+        ("资讯", "新闻资讯"),
+        "新闻 [全文|条数]",
+        "最新剑网3新闻资讯",
+        "日常",
+    ),
+    CommandSpec(
+        "announce",
+        "更新",
+        ("维护", "公告", "维护公告", "更新公告", "游戏更新"),
+        "更新 [条数]",
+        "版本更新与维护公告",
+        "日常",
+    ),
+    CommandSpec("weibo", "微博", ("最新微博",), "微博 博主", "查看最新微博，可指定官方、余玉贤或邓毅", "日常", requires=("weibo_configured",)),
+    CommandSpec("weibo_detail", "微博详情", ("detail",), "detail 配图序号", "逐张查看最近微博的大图；填写序号查看指定图片", "日常", requires=("weibo_configured",)),
+    CommandSpec(
+        "rework",
+        "技改",
+        ("技改记录",),
+        "技改",
+        "最近的武学调整公告",
+        "日常",
+    ),
+    CommandSpec(
+        "builds",
+        "配装",
+        ("配装查询",),
+        "配装 <心法> [标签]",
+        "JX3BOX 热门配装方案",
+        "魔盒",
+        cooldown=5,
+    ),
+    CommandSpec(
+        "macro",
+        "宏",
+        ("一键宏",),
+        "宏 <心法>",
+        "JX3BOX 一键宏",
+        "魔盒",
+        cooldown=5,
+    ),
+    CommandSpec(
+        "auction",
+        "交易行",
+        ("拍卖行",),
+        "交易行 <物品> [区服]",
+        "JX3BOX 交易行成交价",
+        "魔盒",
+        cooldown=6,
+    ),
+    CommandSpec(
+        "kungfu",
+        "心法",
+        ("门派",),
+        "心法 [关键词]",
+        "列出支持的心法 / 门派与别名",
+        "基础",
+        cooldown=2,
+    ),
+    CommandSpec(
+        "ticket",
+        "推栏",
+        ("tuilan",),
+        "推栏 [检测|帮助]",
+        "查看 / 检测推栏 Ticket 状态",
+        "系统",
+        admin_only=True,
+        cooldown=5,
+    ),
+    CommandSpec(
+        "doctor",
+        "剑三诊断",
+        ("插件诊断", "jx3诊断"),
+        "剑三诊断",
+        "管理员：检查 Token、Ticket、JX3BOX 与缓存状态",
+        "系统",
+        admin_only=True,
+        cooldown=10,
+    ),
+    CommandSpec(
+        "online",
+        "在线",
+        ("角色在线", "查在线"),
+        "在线 <区服> <角色名>",
+        "通过第三方在线接口查询角色是否在线",
+        "角色",
+        cooldown=6,
+        requires=('token', 'online_api_url', 'online_api_token'),
+    ),
+    CommandSpec(
+        "activate",
+        "激活",
+        ("激活码", "redeem"),
+        "激活 <激活码>",
+        "使用激活码开通 / 续期本群付费授权",
+        "付费",
+        cooldown=2,
+        requires=('paid_enabled',),
+    ),
+    CommandSpec(
+        "paid_status",
+        "付费状态",
+        ("授权状态", "付费"),
+        "付费状态",
+        "查看本群付费授权有效期",
+        "付费",
+        cooldown=2,
+        requires=('paid_enabled',),
+    ),
+    CommandSpec(
+        "event_push",
+        "事件推送",
+        ("推送",),
+        "推送 <事件名> 开启|关闭；推送 开启|关闭（本群总开关）",
+        "按事件名管理本群推送订阅",
+        "系统",
+        cooldown=3,
+        requires=('event_push_enabled',),
+    ),
+    CommandSpec(
+        "event_list",
+        "推送列表",
+        ("推送状态", "事件列表"),
+        "推送列表",
+        "查看本群全部推送事件的开启 / 关闭状态",
+        "系统",
+        cooldown=3,
+        requires=('event_push_enabled',),
+    ),
+    CommandSpec(
+        "image",
+        "生图",
+        ("绘图", "画图"),
+        "生图 <提示词>",
+        "豆包 AI 文生图",
+        "豆包",
+        cooldown=20,
+        requires=('doubao_api_key',),
+    ),
+    CommandSpec(
+        "image_edit",
+        "图生图",
+        ("垫图",),
+        "图生图 <图片URL> <提示词>",
+        "豆包 AI 图生图（参考图 URL）",
+        "豆包",
+        cooldown=20,
+        requires=('doubao_api_key',),
+    ),
+)
+
+COMMANDS += (
+    CommandSpec('privacy', '隐私说明', (), '隐私说明', '数据保存与日志范围', '基础'),
+    CommandSpec('forecast', '日常预测', (), '日常预测', '未来日常与周常', '日常'),
+    CommandSpec('card_ai','名片生图',('名片AI','名片重绘'),'名片生图 服务器 角色名 [风格]','重绘角色名片','角色',cooldown=15,requires=('token','doubao_api_key')),
+    CommandSpec('role_state', '角色状态', ('角色概览','角色资料'), '角色状态 服务器 角色名', '角色资料、名片与近期战绩', '角色', requires=('token', 'ticket')),
+    CommandSpec('online_stats', '在线统计', ('在线汇总', '角色在线统计'), '在线统计', '已绑定角色的在线状态', '角色', requires=('token', 'online_api_url', 'online_api_token')),
+)
+
+COMMANDS += (CommandSpec('trade_select', '物价选', ('换款',), '物价选 序号', '选择外观款式', '交易', cooldown=1, requires=('token',)),)
+
+COMMANDS += tuple(CommandSpec(row['key'], row['name'], tuple(row['aliases']), row['usage'], row['name'], row['category'], cooldown=0 if row['key'] in {'team_signup_menu','team_signup','team_cancel'} else 3, requires=tuple(row['requires'])) for row in GAME_COMMANDS)
+
+COMMAND_MAP: dict[str, CommandSpec] = {spec.key: spec for spec in COMMANDS}
+
+
+class UsageError(ValueError):
+    pass
+
+
+def _event_text(event: Any) -> str:
+    return str(getattr(event, "message_str", "") or "")
+
+
+def _sender_id(event: Any) -> str:
+    getter = getattr(event, "get_sender_id", None)
+    if callable(getter):
+        try:
+            value = getter()
+            if value is not None:
+                return str(value)
+        except Exception:
+            pass
+    sender = getattr(getattr(event, "message_obj", None), "sender", None)
+    return str(getattr(sender, "user_id", "") or getattr(sender, "id", "") or "")
+
+
+def _session_id(event: Any) -> str:
+    # AstrBot's stable session key is unified_msg_origin; older adapters also
+    # expose session_id on the event or the wrapped message object.
+    for attr in ("unified_msg_origin", "session_id"):
+        value = getattr(event, attr, None)
+        if value:
+            return str(value)
+    message_obj = getattr(event, "message_obj", None)
+    return str(getattr(message_obj, "session_id", "") or "")
+
+
+def _is_admin(event: Any) -> bool:
+    checker = getattr(event, "is_admin", None)
+    if callable(checker):
+        try:
+            return bool(checker())
+        except Exception:
+            pass
+    role = getattr(event, "role", None)
+    if role == "admin":
+        return True
+    sender = getattr(getattr(event, "message_obj", None), "sender", None)
+    return getattr(sender, "role", None) == "admin"
+
+
+class CommandService:
+    def __init__(
+        self,
+        settings: Settings,
+        api: JX3APIClient,
+        box: JX3BOXClient,
+        tuilan: TuilanService,
+        cache: Any,
+        telemetry: Telemetry,
+        *,
+        paid: PaidService | None = None,
+        online: OnlineService | None = None,
+        events: Any = None,
+        doubao: DoubaoClient | None = None,
+        aliases: ServerAliasService | None = None,
+        renderer: ImageRenderer | None = None,
+        articles: Any = None,
+        weibo: Any = None,
+    ) -> None:
+        self.settings = settings
+        self.api = api
+        self.box = box
+        self.tuilan = tuilan
+        self.cache = cache
+        self.telemetry = telemetry
+        self.paid = paid
+        self.online = online
+        self.events = events
+        self.doubao = doubao
+        self.aliases = aliases
+        self.renderer = renderer
+        self.articles = articles
+        self.weibo = weibo
+        self.card_styles = CardStyleStore(settings.data_dir)
+        self._card_pending = {}
+        self._cooldowns: dict[tuple[str, str, str], float] = {}
+        self.query_timeout = 35
+        self.game = GameService(settings, api, renderer, aliases)
+        self.market = MarketService(self.game, getattr(api, "http", None), cache)
+
+    # ------------------------------------------------------------------ catalog
+    def spec(self, key: str) -> CommandSpec | None:
+        return COMMAND_MAP.get(key)
+
+    def specs(self) -> tuple[CommandSpec, ...]:
+        return COMMANDS
+
+    def permission(self, spec: CommandSpec) -> str:
+        return self.settings.command_overrides().get("permissions", {}).get(spec.key, "admin" if spec.admin_only else "all")
+
+    def configured(self, spec: CommandSpec) -> bool:
+        return all(bool(getattr(self.settings, name)) for name in spec.requires)
+
+    def public_catalog(self) -> list[dict[str, Any]]:
+        overrides = self.settings.command_overrides()
+        disabled = set(overrides.get("disabled") or [])
+        cooldowns = overrides.get("cooldowns") or {}
+        result: list[dict[str, Any]] = []
+        for spec in COMMANDS:
+            result.append(
+                {
+                    "key": spec.key,
+                    "name": spec.name,
+                    "aliases": list(spec.aliases),
+                    "usage": spec.usage.replace("<", "").replace(">", ""),
+                    "description": spec.description,
+                    "category": spec.category,
+                    "admin_only": spec.admin_only,
+                    "paid": spec.paid and self.settings.paid_enabled,
+                    "cooldown": int(cooldowns.get(spec.key, spec.cooldown)),
+                    "permission": self.permission(spec),
+                    "available": self.configured(spec),
+                    "enabled": spec.key not in disabled,
+                }
+            )
+        return result
+
+    def effective_enabled(self, key: str) -> bool:
+        overrides = self.settings.command_overrides()
+        if key == "trade_select" and "trade" in set(overrides.get("disabled") or []): return False
+        if key in {"event_push", "event_list"} and not self.settings.event_push_enabled:
+            return False
+        if key in {"image", "image_edit"} and not self.settings.doubao_api_key:
+            return False
+        if key in {"activate", "paid_status"} and not self.settings.paid_enabled:
+            return False
+        return key not in set(overrides.get("disabled") or [])
+
+    def reset_runtime(self) -> None:
+        """Forget cooldown timestamps after the admin changes command settings."""
+
+        self._cooldowns.clear()
+
+    # ------------------------------------------------------------------ dispatch
+    def _remaining_cooldown(
+        self, spec: CommandSpec, event: Any
+    ) -> int:
+        overrides = self.settings.command_overrides()
+        cooldowns = overrides.get("cooldowns") or {}
+        seconds = int(cooldowns.get(spec.key, spec.cooldown))
+        if seconds <= 0:
+            return 0
+        identity = (_session_id(event), _sender_id(event), spec.key)
+        now = time.monotonic()
+        last = self._cooldowns.get(identity, 0.0)
+        if last and now - last < seconds:
+            return max(1, math.ceil(seconds - (now - last)))
+        if len(self._cooldowns) > 2000:
+            cutoff = now - 3600
+            self._cooldowns = {
+                key: value for key, value in self._cooldowns.items() if value >= cutoff
+            }
+        self._cooldowns[identity] = now
+        return 0
+
+    @staticmethod
+    def _args(raw: str) -> str:
+        value = str(raw or "").strip()
+        if value.startswith("/"):
+            value = value[1:].strip()
+        pieces = value.split(maxsplit=1)
+        return pieces[1].strip() if len(pieces) > 1 else ""
+
+    async def run(
+        self, key: str, event: Any, args: str = ""
+    ) -> str | ImageReply | None:
+        if key == 'bind_server' and len(str(args or '').split()) == 2: key = 'role_bind'
+        if key == 'unbind_server' and str(args or '').strip(): key = 'role_unbind'
+        spec = COMMAND_MAP.get(key)
+        if spec is None:
+            return None
+        if not self.effective_enabled(key):
+            return None
+
+        permission = self.permission(spec)
+        if permission == "admin" and not _is_admin(event):
+            return f"「{spec.name}」仅管理员可用。"
+
+        if spec.paid and self.paid is not None and self.paid.gating_enabled:
+            session_id = _session_id(event)
+            if not self.paid.can_use_paid(session_id):
+                return self.paid.block_message(session_id, spec.name)
+
+        remaining = self._remaining_cooldown(spec, event)
+        if remaining:
+            return f"请 {remaining} 秒后再查。"
+
+        args = str(args or "").strip()
+        handler = getattr(self, f"_cmd_{key}", None)
+        if handler is None and key not in GAME_MAP:  # pragma: no cover - catalog/implementation mismatch
+            return "该指令尚未实现。"
+        self.telemetry.record_command(key)
+        started = time.monotonic()
+        try:
+            budget = self.settings.doubao_timeout + 30 if key in {"image", "image_edit", "card_ai", "card_ai_choice"} else self.query_timeout
+            if key in {"news", "announce", "weibo", "weibo_detail"}: budget = max(budget, 65)
+            async with asyncio.timeout(budget):
+                if self.game.bindings:
+                    if key in {'role', 'events', 'achievement', 'online', 'role_state'}:
+                        if not args:
+                            role = await self.game.bindings.role(event)
+                            if role: args = role['server'] + ' ' + role['name']
+                        elif len(args.split()) == 1:
+                            matches = [row for row in await self.game.bindings.list(event) if row['name'] == args]
+                            server = matches[0]['server'] if len(matches) == 1 else await self.game.bindings.server(event)
+                            if server: args = server + ' ' + args
+                    elif key in {'gold', 'sand', 'server'} and not args:
+                        args = await self.game.bindings.server(event)
+                return await self.game.run(key, args, event) if key in GAME_MAP else await handler(args, event)
+        except RenderError as exc:
+            return "出图的人有点多，稍后再试。" if '较多' in str(exc) else "图片没生成成功，请再试一次。"
+        except TimeoutError:
+            return "查询超时，请稍后再试。"
+        except (UsageError, GameUsageError) as exc:
+            self._cooldowns.pop((_session_id(event), _sender_id(event), spec.key), None)
+            reason = str(exc) if isinstance(exc, GameUsageError) else ""
+            return (reason + "\n" if reason else "") + "用法：" + spec.usage.replace("<", "").replace(">", "")
+        except MissingCredential:
+            return f"{spec.name}暂未开通，请联系管理员。"
+        except OnlineError:
+            return "暂时无法确认这个角色是否在线，请稍后再试。"
+        except (PaidError, DoubaoError) as exc:
+            return str(exc)
+        except (JX3APIError, JX3BOXError) as exc:
+            self.telemetry.log("warn", "api", f"{spec.name}：{type(exc).__name__} {getattr(exc, 'code', '')}")
+            if isinstance(exc, JX3BOXError):
+                return exc.message if str(exc.message).startswith(("没有", "未找到", "请", "交易行暂时")) else f"{spec.name}暂时查不到数据，请稍后再试。"
+            if str(exc.code) in {"401", "403"}:
+                return f"{spec.name}的查询服务暂不可用，请联系管理员。"
+            if str(exc.code) in {"400", "404"}:
+                if spec.key == "exam":
+                    return "没有找到这道题，换几个关键词试试。"
+                if spec.key == "trade":
+                    return "没有找到这个外观，试试原名或别名。"
+                return "没有查到相关数据，请检查区服或名称。"
+            if str(exc.code) == "429":
+                return "查询较多，请稍后再试。"
+            return "数据服务暂时没有响应，请稍后再试。"
+        except NetworkError as exc:
+            return exc.message
+        except HttpError:
+            return "数据服务暂时没有响应，请稍后再试。"
+        except Exception as exc:  # pragma: no cover - defensive
+            self.telemetry.log(
+                "error", "command", f"{spec.name} 执行失败：{type(exc).__name__}"
+            )
+            return "查询失败，请稍后再试。"
+
+        finally:
+            self.telemetry.record_command_duration(key, (time.monotonic() - started) * 1000)
+
+    # ------------------------------------------------------------------ helpers
+    def _resolve_server(self, value: str) -> str:
+        text = str(value or "").strip()
+        if self.aliases is not None:
+            return self.aliases.resolve(text)
+        return text
+
+    def _server(self, value: str = "") -> str:
+        server = str(value or "").strip() or self.settings.default_server
+        return self._resolve_server(server)
+
+    def _require(self, value: str, message: str) -> str:
+        text = str(value or "").strip()
+        if not text:
+            raise UsageError(message)
+        return text
+
+    def _split_server_name(self, args: str) -> tuple[str, str]:
+        tokens = args.split()
+        default = self._resolve_server(self.settings.default_server)
+        if len(tokens) >= 2:
+            return self._resolve_server(tokens[0]), " ".join(tokens[1:])
+        if len(tokens) == 1:
+            if not default:
+                raise UsageError("请提供区服，例如：角色 梦江南 张三；或在后台设置默认区服。")
+            return default, tokens[0]
+        raise UsageError("请提供角色名。")
+
+    def _split_name_server(self, args: str) -> tuple[str, str]:
+        tokens = args.split()
+        if not tokens:
+            raise UsageError("请提供物品名称。")
+        default = self._resolve_server(self.settings.default_server)
+        if len(tokens) >= 2:
+            canonical = (
+                self.aliases.lookup(tokens[-1])
+                if self.aliases is not None
+                else (tokens[-1] if assets.is_server(tokens[-1]) else None)
+            )
+            if canonical:
+                return " ".join(tokens[:-1]), canonical
+        return " ".join(tokens), default
+
+    @staticmethod
+    def _limit(args: str, default: int = 8, maximum: int = 20) -> int:
+        if not args.strip():
+            return default
+        try:
+            return max(1, min(maximum, int(args.strip().split()[0])))
+        except (TypeError, ValueError):
+            return default
+
+    # ------------------------------------------------------------------- commands
+    def _help_categories(self, event: Any = None) -> list[dict[str, Any]]:
+        order: list[str] = []
+        grouped: dict[str, list[dict[str, Any]]] = {}
+        for spec in COMMANDS:
+            if spec.key in {'trade_select', 'card_ai_choice'}:
+                continue
+            if not self.effective_enabled(spec.key):
+                continue
+            if self.permission(spec) == "admin" and not _is_admin(event):
+                continue
+            if not self.configured(spec):
+                continue
+            category = {'基础':'绑定与设置','系统':'绑定与设置','绑定':'绑定与设置','日常':'江湖日常','资讯':'江湖日常','角色':'角色与奇遇','奇遇':'角色与奇遇','PVP':'竞技与阵营','排行榜':'竞技与阵营','阵营':'竞技与阵营','PVE':'副本与配装','魔盒':'副本与配装','交易':'物价与交易','家园':'家园与招募','招募':'家园与招募'}.get(spec.category, spec.category)
+            if category not in grouped:
+                order.append(category)
+                grouped[category] = []
+            grouped[category].append(
+                {
+                    "name": spec.name,
+                    "usage": spec.usage.replace("<", "").replace(">", ""),
+                    "arguments": spec.usage.partition(" ")[2].replace("<", "").replace(">", ""),
+                    "description": spec.description,
+                    "aliases": list(spec.aliases),
+                    "paid": spec.paid and self.settings.paid_enabled,
+                }
+            )
+        return [{"name": name, "items": grouped[name]} for name in order]
+
+    async def _cmd_help(self, args: str, event: Any) -> str | ImageReply | MenuReply:
+        from . import PLUGIN_VERSION
+
+        query = str(args or "").strip()
+        if query in {"功能", "菜单", "帮助", "help", "目录"}:
+            query = ""
+        categories = self._help_categories(event)
+        page = 1
+        match = re.fullmatch(r"(.+?)\s+第?(\d+)页?", query)
+        category_name = match.group(1) if match else query
+        selected = next((group for group in categories if group['name'] == category_name), None)
+        if selected:
+            page = max(1, min(int(match.group(2)) if match else 1, math.ceil(len(selected['items']) / 18)))
+        if query and not selected:
+            target: CommandSpec | None = None
+            for spec in COMMANDS:
+                if query in {spec.key, spec.name, *spec.aliases}:
+                    target = spec
+                    break
+            if target is not None:
+                if not self.effective_enabled(target.key) or not self.configured(target):
+                    return f"{target.name}暂未开通。"
+                if self.permission(target) == "admin" and not _is_admin(event):
+                    return f"「{target.name}」仅管理员可用。"
+                return (
+                    f"【{target.name}】{target.description}\n"
+                    "用法：" + target.usage.replace("<", "").replace(">", "")
+                )
+            kungfu = assets.find_kungfu(query)
+            if kungfu is not None:
+                return (
+                    f"未找到指令「{query}」。\n"
+                    f"你要找的「{kungfu['name']}」是心法，请发送：配装 {kungfu['name']}"
+                )
+            return f"未找到指令「{query}」。发送「剑三」查看全部功能。"
+        buttons = []
+        if selected:
+            start = (page - 1) * 18
+            displayed = [{**selected, 'items': selected['items'][start:start + 18]}]
+            if page > 1: buttons.append(Button('上一页', f"功能 {selected['name']} {page - 1}"))
+            if start + 18 < len(selected['items']): buttons.append(Button('下一页', f"功能 {selected['name']} {page + 1}"))
+            buttons.append(Button('功能目录', '功能'))
+            menu = MenuReply(selected['name'], tuple(buttons), _sender_id(event))
+        else:
+            priorities = {
+                '绑定与设置': ('绑定角色', '我的角色', '绑定区服', '心法'),
+                '江湖日常': ('日常', '开服', '新闻', '更新', '微博'),
+                '物价与交易': ('物价', '金价', '外观成交', '外观别名'),
+                '竞技与阵营': ('名剑排行', '名剑', '战绩', '沙盘', '阵营排行'),
+                '角色与奇遇': ('奇遇', '奇遇攻略', '名片', '装备属性'),
+                '副本与配装': ('副本', '配装', '百战', '宏', '掉落'),
+                '家园与招募': ('花价', '招募', '拜师', '团长'),
+                '团队': ('开团', '报名', '查看团队', '取消报名'),
+                '避雷': ('避雷查询', '避雷查看', '避雷添加'),
+                '休闲': ('今日运势', '塔罗', '塔罗三张', '恋爱书'),
+            }
+            displayed = []
+            for group in categories:
+                names = priorities.get(group['name'], ())
+                items = sorted(group['items'], key=lambda item: names.index(item['name']) if item['name'] in names else len(names))
+                displayed.append({**group, 'items': items[:4]})
+                buttons.append(Button(group['name'], '功能 ' + group['name']))
+            menu = MenuReply('选择分类', tuple(buttons), _sender_id(event))
+        if self.renderer is not None and self.renderer.available:
+            try:
+                return ImageReply(await self.renderer.help({'categories': displayed, 'overview': not selected, 'title': selected['name'] if selected else '剑网3百宝箱', 'version': PLUGIN_VERSION}), menu=menu)
+            except RenderError:
+                pass
+        if not selected:
+            return MenuReply('剑网3百宝箱\n选择要查看的分类', tuple(buttons), _sender_id(event))
+        text = selected['name'] + '\n\n' + '\n'.join(item['usage'] for item in displayed[0]['items'])
+        return MenuReply(text, tuple(buttons), _sender_id(event))
+
+    async def _cmd_calendar(self, args: str, event: Any) -> str | ImageReply:
+        tokens = args.split()
+        want_image = "文字" not in tokens
+        tokens = [item for item in tokens if item not in {"图", "图片", "截图", "文字"}]
+        arg = " ".join(tokens)
+        weekly = arg in {"本周", "一周", "7"}
+        if weekly or (want_image and not arg):
+            data, detail = await asyncio.gather(self.api.calendar(6, "list"), self.api.calendar(0, "day"))
+            data = dict(data)
+            today = date.fromisoformat(data.get("today", {}).get("date") or date.today().isoformat())
+            monday = today - timedelta(days=today.weekday())
+            data["total"] = [row for row in data.get("total", []) if monday.isoformat() <= str(row.get("date", "")) <= (monday + timedelta(days=6)).isoformat()]
+            data["today_detail"] = detail
+        else:
+            try:
+                offset = int(arg or 0)
+            except ValueError as exc:
+                raise UsageError("日期格式不正确") from exc
+            if not 0 <= offset <= 15:
+                raise UsageError("日期超出范围")
+            data = await self.api.calendar(offset, "day")
+            if want_image:
+                data = {"today": {"date": data.get("date")}, "total": [data], "today_detail": data}
+        if want_image and self.renderer and self.renderer.available:
+            try:
+                return ImageReply(await self.renderer.daily(data))
+            except Exception as exc:
+                self.telemetry.log("warn", "render", "日常图片失败：" + type(exc).__name__)
+        return fmt.calendar(data)
+
+    async def _cmd_server(self, args: str, event: Any) -> str:
+        data = await self.api.server_status()
+        return fmt.server_status(data, self._resolve_server(args.strip()))
+
+    async def _cmd_gold(self, args: str, event: Any) -> str:
+        server = self._server(args.strip())
+        return fmt.gold(await self.api.gold(server, 10), server)
+
+    async def _cmd_sand(self, args: str, event: Any) -> str | ImageReply:
+        tokens = args.split()
+        want_image = "文字" not in tokens
+        tokens = [item for item in tokens if item not in {"图", "图片", "截图", "文字"}]
+        server = self._require(
+            self._server(" ".join(tokens)), "请提供区服，例如：沙盘 梦江南"
+        )
+        data = await self.api.sand(server)
+        if want_image and self.renderer is not None and self.renderer.available:
+            try:
+                return ImageReply(await self.renderer.sand(data, server=server))
+            except Exception as exc:
+                self.telemetry.log("warn", "render", "沙盘图片失败：" + type(exc).__name__)
+        return fmt.sand(data, server)
+
+    async def _cmd_role(self, args: str, event: Any) -> str:
+        server, name = self._split_server_name(args)
+        return fmt.role(await self.api.role_detail(server, name), server, name)
+
+    async def _cmd_events(self, args: str, event: Any) -> str | ImageReply:
+        tokens = args.split()
+        want_image = "文字" not in tokens
+        tokens = [item for item in tokens if item not in {"图", "图片", "截图", "文字"}]
+        server, name = self._split_server_name(" ".join(tokens))
+        data = await self.api.event_records(server, name)
+        if want_image and self.renderer is not None and self.renderer.available:
+            try:
+                return ImageReply(
+                    await self.renderer.qiyu(data, server=server, name=name)
+                )
+            except Exception as exc:
+                self.telemetry.log("warn", "render", "奇遇图片失败：" + type(exc).__name__)
+        return fmt.events(data, server, name)
+
+    async def _cmd_strategy(self, args: str, event: Any) -> str | ImageReply:
+        name = self._require(args.strip(), "请提供奇遇名称")
+        async with asyncio.timeout(25):
+            data = await self.box.guide(name)
+            if self.articles and self.renderer and self.renderer.available:
+                try:
+                    paths = await self.articles.render_content(data)
+                    return ImageReply(paths[0], tuple(paths[1:]))
+                except Exception as exc:
+                    self.telemetry.log("warn", "render", "攻略图片失败：" + type(exc).__name__)
+            from bs4 import BeautifulSoup
+            body = BeautifulSoup(data["content"], "html.parser").get_text("\n", strip=True)
+            return data["title"] + "\n\n" + body
+
+    async def _cmd_exam(self, args: str, event: Any) -> str:
+        subject = self._require(args.strip(), "请提供科举题目，例如：科举 剑网3是什么")
+        return fmt.exam(await self.api.exam(subject), subject)
+
+    async def _cmd_trade(self, args: str, event: Any) -> str | ImageReply:
+        tokens = [
+            item
+            for item in str(args or "").split()
+            if item not in {"图", "图片", "截图", "文字"}
+        ]
+        name, server = self._split_name_server(" ".join(tokens))
+        if self.game.bindings and not (tokens and self.aliases and self.aliases.lookup(tokens[-1])):
+            server = await self.game.bindings.server(event) or server
+        return await self.market.query(name, server, event, text_only="文字" in str(args).split())
+
+    async def _cmd_trade_select(self, args, event):
+        if not args.strip().isdigit(): return await self._cmd_trade(args, event)
+        return await self.market.select(args.strip(), event)
+
+    async def _cmd_achievement(self, args: str, event: Any) -> str:
+        server, name = self._split_server_name(args)
+        data = await self.api.tuilan_achievement(server, name)
+        return fmt.achievement(data, server, name)
+
+    def _news_page_reply(self, paths, caption, start, event):
+        if start < 1 or start > len(paths): return '没有这一页。'
+        selected=paths[start-1:start+1];buttons=[]
+        if start>1: buttons.append(Button('上一页',f'新闻 第{max(1,start-2)}页'))
+        if start+1<len(paths): buttons.append(Button('下一页',f'新闻 第{start+2}页'))
+        menu=MenuReply(f'第 {start}—{start+len(selected)-1} 页 / 共 {len(paths)} 页',tuple(buttons),_sender_id(event)) if buttons else None
+        return ImageReply(selected[0],tuple(selected[1:]),caption=caption,menu=menu)
+
+    async def _news_reply(self, args: str, announce=False, event=None):
+        reading_key=(_session_id(event),_sender_id(event)) if event is not None else None
+        if not announce and args.strip() == '续看':
+            reading = self.events.news_readings.get('push', _session_id(event)) if self.events else None
+            if not reading or any(not Path(path).is_file() for path in reading['paths']): return '这条新闻已过期，请发送「新闻」查看最新内容。'
+            self.cache.set('news-reading', reading_key, reading, 1200)
+            return self._news_page_reply(reading['paths'], reading['caption'], 3, event)
+        page_match=re.fullmatch(r'第([1-9][0-9]*)页',args.strip())
+        if not announce and page_match:
+            reading=self.cache.get('news-reading',reading_key)
+            if not reading or any(not Path(path).is_file() for path in reading['paths']): return '请先发送「新闻」打开正文。'
+            return self._news_page_reply(reading['paths'],reading['caption'],int(page_match[1]),event)
+        tokens = args.split()
+        want_image = "文字" not in tokens and not any(item.isdigit() for item in tokens)
+        limit = self._limit(args, (3 if announce else 1) if want_image else 8)
+        rows = await (self.api.announce(limit) if announce else self.api.news(limit))
+        if want_image and rows and self.articles and self.renderer and self.renderer.available:
+            try:
+                async with asyncio.timeout(55):
+                    paths = await self.articles.from_announcement(rows[0]) if announce else await self.articles.from_news(rows[0], compact="全文" not in tokens)
+                links = []
+                for row in rows[:limit]:
+                    detail = row.get('desc') if isinstance(row.get('desc'), dict) else {}
+                    title, date, url = row.get('title') or detail.get('title') or '官方公告', row.get('date') or '', row.get('url') or detail.get('url') or ''
+                    links.append((str(date) + ' · ' if date else '') + str(title) + ('\n' + str(url) if url else ''))
+                caption='\n\n'.join(links)
+                if not announce and event is not None:
+                    self.cache.set('news-reading',reading_key,{'paths':paths,'caption':caption},1200)
+                    return self._news_page_reply(paths,caption,1,event)
+                return ImageReply(paths[0], tuple(paths[1:]), caption=caption)
+            except Exception as exc:
+                self.telemetry.log("warn", "render", "官方正文图片失败：" + type(exc).__name__)
+        return fmt.news(rows, limit=limit, announce=announce)
+
+    async def _cmd_news(self, args: str, event: Any) -> str | ImageReply:
+        return await self._news_reply(args,event=event)
+
+    async def _cmd_announce(self, args: str, event: Any) -> str | ImageReply:
+        return await self._news_reply(args, announce=True)
+
+    async def _cmd_weibo(self, args, event):
+        return await self.weibo.latest(args, _session_id(event))
+
+    async def _cmd_weibo_detail(self, args, event):
+        return await self.weibo.detail(args, _session_id(event))
+
+    async def _cmd_rework(self, args: str, event: Any) -> str:
+        return fmt.rework(await self.api.skill_rework())
+
+    async def _cmd_builds(self, args: str, event: Any) -> str:
+        tokens = args.split(maxsplit=1)
+        if not tokens:
+            raise UsageError("请提供心法，例如：配装 花间 PvE")
+        tags = tokens[1].strip() if len(tokens) > 1 else ""
+        return fmt.builds(await self.box.builds(tokens[0], tags=tags, limit=6))
+
+    async def _cmd_macro(self, args: str, event: Any) -> str:
+        kungfu = self._require(args.strip(), "请提供心法，例如：宏 花间")
+        return fmt.macros(await self.box.macros(kungfu))
+
+    async def _cmd_auction(self, args: str, event: Any) -> str:
+        name, server = self._split_name_server(args)
+        if self.game.bindings and not (args.split() and self.aliases and self.aliases.lookup(args.split()[-1])):
+            server = await self.game.bindings.server(event) or server
+        server = self._require(server, "请提供区服，例如：交易行 五行石 梦江南")
+        rows = await self.box.auction(name, server)
+        return fmt.auction(rows, name, server)
+
+    async def _cmd_kungfu(self, args: str, event: Any) -> str:
+        return fmt.kungfu_list(args.strip())
+
+    async def _cmd_ticket(self, args: str, event: Any) -> str:
+        action = args.strip().lower()
+        summary = self.tuilan.summary()
+        if action in {"帮助", "help", "教程", "获取"}:
+            return TICKET_GUIDE
+        if action in {"检测", "check", "test", "验证"}:
+            if not summary.get("configured"):
+                return "尚未配置推栏 Ticket。\n\n" + TICKET_GUIDE
+            return fmt.ticket_status(summary, await self.tuilan.validate())
+        validation = summary.get("last_result")
+        return fmt.ticket_status(summary, validation if isinstance(validation, dict) else None)
+
+    async def _cmd_doctor(self, args: str, event: Any) -> str:
+        from . import PLUGIN_VERSION
+
+        lines = [f"🔍 剑网3百宝箱诊断（v{PLUGIN_VERSION}）"]
+        checks: list[tuple[str, Callable[[], Awaitable[Any]]]] = [
+            ("JX3API 连接", self.api.probe_connect),
+        ]
+        if self.settings.token:
+            checks.append(("JX3API Token", self.api.probe_token))
+        if self.settings.token and self.settings.ticket:
+            checks.append(("推栏 Ticket", self.api.probe_ticket))
+        checks.append(("JX3BOX", self.box.probe))
+        for label, probe in checks:
+            try:
+                result = await probe()
+                lines.append(f"✅ {label}：{result.get('message') or '正常'}")
+            except Exception as exc:
+                if isinstance(exc, JX3APIError):
+                    detail = describe_jx3_error(exc)
+                elif isinstance(exc, JX3BOXError):
+                    detail = exc.message
+                elif isinstance(exc, HttpError):
+                    detail = exc.message
+                else:
+                    detail = str(exc) or type(exc).__name__
+                lines.append(f"❌ {label}：{detail}")
+        if not self.settings.token:
+            lines.append("⚠️ JX3API Token：未配置，会员接口不可用")
+        if not self.settings.ticket:
+            lines.append("⚠️ 推栏 Ticket：未配置，名剑/名片/门派/资历接口不可用")
+        stats = self.cache.stats()
+        lines.append(
+            f"📦 缓存：{stats['entries']} 条，命中率 {stats['hit_rate'] * 100:.0f}%"
+        )
+        if self.events is not None:
+            status = self.events.status()
+            lines.append(
+                "📡 事件推送："
+                + (
+                    "已连接"
+                    if status.get("connected")
+                    else "未连接"
+                    if status.get("enabled")
+                    else "后台未开启"
+                )
+                + (f" · {status.get('last_error')}" if status.get("last_error") else "")
+            )
+        if self.paid is not None:
+            paid_status = self.paid.status(_session_id(event))
+            lines.append(
+                "💳 本群授权："
+                + ("有效" if paid_status["active"] else paid_status["message"])
+            )
+        if self.doubao is not None:
+            lines.append("🎨 豆包生图：" + ("已配置" if self.doubao.enabled else "未配置"))
+        if self.online is not None:
+            lines.append(
+                "🌐 在线查询：" + ("已配置" if self.online.summary()["configured"] else "未配置")
+            )
+        lines.append("后台：AstrBot WebUI → 插件 → 剑网3百宝箱")
+        return "\n".join(lines)
+
+    async def _cmd_online(self, args: str, event: Any) -> str:
+        if self.online is None:
+            raise OnlineError("在线查询服务未初始化")
+        server, name = self._split_server_name(args)
+        result = await self.online.query(server, name)
+        return f"{result['server']} · {result['name']}：{'在线' if result['online'] else '离线'}"
+
+    async def _cmd_activate(self, args: str, event: Any) -> str:
+        if self.paid is None:
+            raise PaidError("付费授权服务未初始化")
+        code = self._require(args.strip(), "请提供激活码，例如：激活 JX3-XXXX-XXXX-XXXX")
+        result = self.paid.activate(_session_id(event), code)
+        return result["message"]
+
+    async def _cmd_paid_status(self, args: str, event: Any) -> str:
+        if self.paid is None:
+            return "付费授权服务未初始化。"
+        if not self.paid.gating_enabled:
+            return "付费授权模式未开启：当前所有查询指令都可直接使用。"
+        session_id = _session_id(event)
+        status = self.paid.status(session_id)
+        if status["active"]:
+            return (
+                "💳 本群付费授权有效\n"
+                f"到期：{status['expires']}\n"
+                f"剩余：约 {status['days']} 天"
+                + (f"\n备注：{status['note']}" if status["note"] else "")
+
+            )
+        return (
+            f"💳 {status['message']}\n"
+            "管理员可在后台添加白名单；群成员也可以发送「激活 <激活码>」自助开通。"
+
+        )
+
+    async def _cmd_event_push(self, args: str, event: Any) -> str:
+        if self.events is None:
+            return "事件推送服务未初始化。"
+        first, _, second = str(args or "").strip().partition(" ")
+        if first and first not in {"状态", "查看", "status", "列表", "list"}:
+            sender = getattr(getattr(event, "message_obj", None), "sender", None)
+            group_role = getattr(sender, "role", "")
+            message = getattr(getattr(event, "message_obj", None), "raw_message", {})
+            if isinstance(message, dict):
+                group_role = (message.get("sender") or {}).get("role", group_role)
+            if not _is_admin(event) and group_role not in {"owner", "admin"}:
+                return "请让群主或管理员修改推送订阅。"
+        return self.events.configure(_session_id(event), first.strip(), second.strip())
+
+    async def _cmd_event_list(self, args: str, event: Any) -> str:
+        if self.events is None:
+            return "事件推送服务未初始化。"
+        return self.events.format_status_list(_session_id(event))
+
+    async def _cmd_image(self, args: str, event: Any) -> ImageReply:
+        if self.doubao is None:
+            raise DoubaoError("豆包生图服务未初始化")
+        prompt = self._require(args.strip(), "请提供提示词，例如：生图 剑网3 水墨 花间")
+        path = await self.doubao.generate(prompt)
+        return ImageReply(str(path))
+
+    async def _cmd_image_edit(self, args: str, event: Any) -> ImageReply:
+        if self.doubao is None:
+            raise DoubaoError("豆包生图服务未初始化")
+        pieces = args.split(maxsplit=1)
+        if len(pieces) < 2:
+            raise UsageError("用法：图生图 <图片URL> <提示词>")
+        image_url, prompt = pieces[0].strip(), pieces[1].strip()
+        if not image_url.startswith(("http://", "https://")):
+            raise UsageError("参考图必须是 http:// 或 https:// 地址")
+        path = await self.doubao.generate(prompt, image=image_url)
+        return ImageReply(str(path))
+
+    async def _cmd_forecast(self, args, event):
+        if args: raise UsageError()
+        data = await self.api.calendar(15, 'list')
+        return ImageReply(await self.renderer.daily(data))
+
+    async def _cmd_role_state(self, args, event):
+        server, name = self._split_server_name(args)
+        detail = await self.api.role_detail(server, name)
+        if not isinstance(detail, dict) or detail.get('roleName') != name:
+            return '没有找到这个角色。'
+        card, arena = await asyncio.gather(self.game.data.card_remote(server, name), self.game.data.zhanji(name, server, '33'))
+        facts = [(label, detail.get(field)) for label, field in [('门派','forceName'),('体型','bodyName'),('阵营','campName'),('帮会','tongName')]]
+        context = {'title': name, 'subtitle': server, 'facts': [row for row in facts if row[1]], 'columns': ['时间','心法','评分'], 'rows': [], 'image': ''}
+        if str(card.get('code')) == '200':
+            context['image'] = next((part['path'] for part in card['data'] if part['type'] == 'image'), '')
+            likes = next((part['text'] for part in card['data'] if part['type'] == 'text' and part['text'].startswith('点赞：')), '')
+            if likes: context['facts'].append(('名片点赞', likes.split('：',1)[1]))
+        if str(arena.get('code')) == '200':
+            context['table_title'] = '近期名剑战绩'
+            context['rows'] = [[format_time(row.get('startTime'))[:16] or '—', row.get('kungfu',''), row.get('totalMmr','')] for row in arena['data'].get('history',[])[:6]]
+        return ImageReply(await self.renderer.render('game_records', context))
+
+    async def _cmd_online_stats(self, args, event):
+        if args: raise UsageError()
+        roles = await self.game.bindings.list(event)
+        if not roles: return '还没有绑定角色。用法：绑定角色 服务器 角色名'
+        slots = asyncio.Semaphore(3)
+        async def query(role):
+            async with slots:
+                try:
+                    async with asyncio.timeout(6): status = await self.online.query(role['server'], role['name'])
+                    label = '在线' if status['online'] else '离线'
+                except (OnlineError, JX3APIError, HttpError, TimeoutError): label = '暂未查到'
+                return [role['server'], role['name'], label]
+        rows = await asyncio.gather(*(query(role) for role in roles))
+        return ImageReply(await self.renderer.render('game_records', {'title':'在线统计','subtitle':'','facts':[],'columns':['服务器','角色','状态'],'rows':rows}))
+
+    async def _cmd_privacy(self, args, event):
+        return '百宝箱不保存群聊消息正文。\n主动绑定的角色按用户保存；区服绑定、团队和避雷记录按会话保存。\n运行日志过滤聊天正文和消息追踪记录。AstrBot 的历史会话功能由面板设置控制，已有历史日志不会自动删除。'
+
+# ======================================================================
+# ★ 名片生图（按模板选择 ✅ 模板库可后台管理）
+# ======================================================================
+
+_CARD_AI_SPECS = (
+    CommandSpec("card_ai", "名片生图", ("名片重绘", "名片AI"),
+                "名片生图 <区服> <角色名> [模板序号|模板名]",
+                "选择模板重绘角色名片",
+                "角色", cooldown=10, requires=("token", "doubao_api_key")),
+    CommandSpec('card_ai_choice', '名片模板', (), '名片模板 服务器 角色名 操作', '选择名片生图模板', '角色', cooldown=0, requires=('token', 'doubao_api_key')),
+)
+COMMANDS = tuple(spec for spec in COMMANDS if spec.key not in {"card_ai", "card_ai_choice"}) + _CARD_AI_SPECS
+COMMAND_MAP.update({spec.key: spec for spec in _CARD_AI_SPECS})
+
+
+async def _card_image_url(self, server: str, name: str) -> str:
+    card = await self.game.data.card_remote(server, name)
+    if str(card.get('code')) != '200': raise JX3APIError(card.get('code', 0), card.get('msg') or '没有查到名片。')
+    return next((part['path'] for part in card.get('data', []) if part.get('type') == 'image'), '')
+
+
+def _card_menu(pending, owner, page=1):
+    styles = pending['styles']
+    size = 8 if len(styles) <= 16 else 6
+    pages = math.ceil(len(styles) / size)
+    page = max(1, min(page, pages))
+    prefix = f"名片模板 {pending['server']} {pending['name']} "
+    buttons = [Button(label, prefix + '选择 ' + label) for key, label in styles[(page - 1) * size:page * size]]
+    if page > 1: buttons.append(Button('上一页', prefix + f'第{page - 1}页'))
+    if page < pages: buttons.append(Button('下一页', prefix + f'第{page + 1}页'))
+    buttons.append(Button('取消', prefix + '取消'))
+    title = f"{pending['name']} · 选择生图模板"
+    if pages > 1: title += f'（{page}/{pages}）'
+    return MenuReply(title, tuple(buttons), owner)
+
+
+async def _card_pick(self, event: Any, server: str, name: str, url: str,
+                     style_key: str = "", style_label: str = "") -> Any:
+    """真正生成 ✅"""
+    if self.doubao is None or not getattr(self.doubao, "enabled", False):
+        return "名片生图暂未开通，请联系管理员。"
+    store = self.card_styles
+    if store is None:
+        return "生图模板暂时不可用，请联系管理员。"
+    row = store.get(style_key or style_label)
+    if not row or not row.get("enabled", True): return "这个模板已停用，请重新选择。"
+    label = row.get("label") or style_label or style_key or "自定义"
+    prompt = str(row.get("prompt") or "").strip()
+    if not prompt:
+        prompt = (f"在保留角色五官、发型与服饰特征的前提下，改成「{label}」风格，"
+                  "构图优雅，背景留白，画面高级，【不要任何文字与水印】")
+    negative = str(row.get("negative") or "").strip() or "文字, 水印, 低画质, 畸形, 面部崩坏"
+    size = str(row.get("size") or "").strip() or None
+    final_size = str(row.get("final_size") or "").strip()
+
+    # 门派占位符 ✅
+    if "{force}" in prompt or "{body}" in prompt or "{name}" in prompt:
+        try:
+            detail = await self.api.role_detail(server, name)
+        except Exception:
+            detail = {}
+        force = str((detail or {}).get("forceName") or "")
+        body = str((detail or {}).get("bodyName") or "")
+        if "{force}" in prompt and not force:
+            return "没有查到角色门派，请换一个模板。"
+        prompt = (prompt.replace("{force}", force or "未知门派")
+                        .replace("{body}", body or "未知体型")
+                        .replace("{name}", str(name)))
+
+    await event.send(event.plain_result(f"正在生成「{label}」风格。"))
+    try:
+        out = await self.doubao.generate(prompt, image=url, negative_prompt=negative,
+                                         size=size)
+    except DoubaoError as exc:
+        return str(exc)
+    except Exception as exc:
+        self.telemetry.log('error', 'card_ai', type(exc).__name__)
+        return '图片生成失败，请稍后重试。'
+
+    # 特殊尺寸压缩 ✅
+    if final_size:
+        try:
+            from PIL import Image as _I
+            w, h = [int(x) for x in final_size.lower().split("x")]
+            im = _I.open(out).convert("RGB").resize((w, h), _I.LANCZOS)
+            fp = Path(str(out)).with_name(Path(str(out)).stem + "_final.jpg")
+            im.save(fp, "JPEG", quality=94)
+            out = fp
+        except Exception:
+            pass
+    return ImageReply(str(out))
+
+
+async def _cmd_card_ai(self, args: str, event: Any) -> Any:
+    if self.doubao is None or not self.doubao.enabled: return '名片生图暂未开通，请联系管理员。'
+    words = str(args or '').split()
+    bindings = self.game.bindings
+    server = self.aliases.lookup(words[0]) if words and self.aliases else None
+    if not server and words and assets.is_server(words[0]): server = words[0]
+    if server:
+        words.pop(0)
+        if not words: raise UsageError()
+        name = words.pop(0)
+    elif not words:
+        role = await bindings.role(event) if bindings else None
+        if not role: raise UsageError()
+        server, name = role['server'], role['name']
+    else:
+        name = words.pop(0)
+        roles = await bindings.list(event) if bindings else []
+        matches = [role for role in roles if role['name'] == name]
+        if len(matches) == 1:
+            server = matches[0]['server']
+        else:
+            server = (await bindings.server(event) if bindings else '') or self.settings.default_server
+            if len(matches) > 1 and server not in {role['server'] for role in matches}:
+                return '有多个同名角色，请指定区服：' + '、'.join(role['server'] for role in matches)
+        if not server: raise UsageError()
+    server = self._resolve_server(server)
+    style_hint = ' '.join(words)
+    styles = self.card_styles.menu()
+    if not styles: return '暂无可用的生图模板，请联系管理员。'
+    if style_hint:
+        if style_hint.isdigit():
+            index = int(style_hint)
+            if not 1 <= index <= len(styles): return f'模板序号可选 1～{len(styles)}。'
+            style_hint = styles[index - 1][0]
+        row = self.card_styles.get(style_hint)
+        if not row or not row.get('enabled', True): return '没有这个模板。发送「名片生图 服务器 角色名」查看可选模板。'
+    url = await _card_image_url(self, server, name)
+    if not url: return '没有找到这张名片。'
+    if style_hint: return await _card_pick(self, event, server, name, url, style_hint)
+    now = time.time()
+    self._card_pending = {key: row for key, row in self._card_pending.items() if now - row['at'] <= 120}
+    self._card_pending[(_session_id(event), _sender_id(event))] = {
+        'server': server, 'name': name, 'url': url, 'styles': styles, 'at': now,
+    }
+    return _card_menu(self._card_pending[(_session_id(event), _sender_id(event))], _sender_id(event))
+
+
+async def _cmd_card_ai_choice(self, args, event):
+    spec = self.spec('card_ai')
+    if not self.effective_enabled('card_ai'): return '名片生图暂未开启。'
+    if self.permission(spec) == 'admin' and not _is_admin(event): return '「名片生图」仅管理员可用。'
+    words = args.split(maxsplit=2)
+    if len(words) != 3: raise UsageError()
+    server, name, action = words
+    key = (_session_id(event), _sender_id(event))
+    pending = self._card_pending.get(key)
+    if not pending: return '这个菜单已结束，请重新发送「名片生图」。'
+    if time.time() - pending['at'] > 120:
+        self._card_pending.pop(key, None)
+        return '这个菜单已过期，请重新发送「名片生图」。'
+    if server != pending['server'] or name != pending['name']:
+        return '请使用最新的生图模板菜单。'
+    if action == '取消':
+        self._card_pending.pop(key, None)
+        return '已取消。'
+    page = re.fullmatch(r'第([1-9][0-9]*)页', action)
+    if page: return _card_menu(pending, _sender_id(event), int(page[1]))
+    if not action.startswith('选择 '): raise UsageError()
+    label = action.removeprefix('选择 ').strip()
+    match = next(((k, v) for k, v in pending['styles'] if v == label), None)
+    if match is None: return '没有这个模板，请重新选择。'
+    row = self.card_styles.get(match[0])
+    if not row or not row.get('enabled', True): return '这个模板已停用，请重新选择。'
+    self._card_pending.pop(key, None)
+    return await _card_pick(self, event, server, name, pending['url'], *match)
+
+
+async def _card_pending_reply(self, event: Any, text: str) -> Any:
+    key = (_session_id(event), _sender_id(event))
+    pending = self._card_pending.get(key)
+    if not pending: return None
+    if time.time() - pending['at'] > 120:
+        self._card_pending.pop(key, None)
+        return None
+    raw = str(text or '').strip().lstrip('/')
+    if raw.lower() in ('退出', '取消', 'q', 'cancel', 'exit', '算了'): action = '取消'
+    elif raw.isdigit():
+        index = int(raw)
+        if not 1 <= index <= len(pending['styles']): return f"请输入 1～{len(pending['styles'])} 的序号，或回复「退出」。"
+        action = '选择 ' + pending['styles'][index - 1][1]
+    else: return None
+    try:
+        async with asyncio.timeout(self.settings.doubao_timeout + 30):
+            return await _cmd_card_ai_choice(self, f"{pending['server']} {pending['name']} {action}", event)
+    except TimeoutError:
+        return '图片生成超时，请稍后重试。'
+
+
+CommandService._cmd_card_ai = _cmd_card_ai
+CommandService._card_pending_reply = _card_pending_reply
+
+CommandService._cmd_card_ai_choice = _cmd_card_ai_choice

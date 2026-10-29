@@ -1,0 +1,12 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>{{ title }}</title><style>/*__INK_CSS__*/
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body)}
+main{position:relative;isolation:isolate;width:1000px;padding:160px 64px 66px}.wide{width:1600px;padding-top:236px}
+header{border-bottom:1px solid var(--cinnabar);padding-bottom:25px;margin-bottom:32px}
+header h1{font-size:40px;line-height:1.4;margin:0 0 18px;font-weight:500}.wide header h1{font-size:48px}
+.meta{display:flex;justify-content:flex-start;gap:32px;color:var(--sub);font-size:24px}
+.body{font-size:28px;line-height:1.7;overflow-wrap:anywhere}.wide .body{column-count:2;column-gap:76px;column-rule:1px solid var(--rule);font-size:29px}
+.body p{margin:0 0 19px;break-inside:avoid;orphans:3;widows:3}.body h1,.body h2{font-size:31px;line-height:1.5;margin:26px 0 14px;color:var(--cinnabar);break-after:avoid}.body h3,.body h4{font-size:29px;margin:22px 0 12px;break-after:avoid}
+.body strong,.body b{font-weight:600;color:var(--cinnabar)}.body img{display:block;max-width:100%;width:auto;height:auto;max-height:620px;object-fit:contain;margin:20px auto;break-inside:avoid}.body ul,.body ol{padding-left:1.4em}.body li{break-inside:avoid}
+table{width:100%;border-collapse:collapse;font-size:24px;break-inside:avoid}td,th{padding:8px;border:1px solid var(--rule)}
+.scene-top{height:420px;opacity:.58}.scene-bottom{height:460px;opacity:.18}
+header h1{font-weight:700;color:var(--ink)}.body h1,.body h2{font:700 34px/1.45 var(--body);border-bottom:1px solid var(--rule);padding-bottom:9px;margin-top:30px;color:var(--cinnabar)}.body h3,.body h4{font:700 30px/1.5 var(--body);color:var(--ink);margin:25px 0 12px}.body strong,.body b{font-weight:700;color:var(--ink)}.body>h2:first-child,.body>h1:first-child{margin-top:0}.body p{color:#504b44}.body blockquote{margin:18px 0;padding-left:18px;border-left:3px solid var(--cinnabar)}</style></head><body><main class="{% if columns == 2 %}wide{% endif %}"><div class="scene scene-top" aria-hidden="true"></div><div class="scene scene-bottom" aria-hidden="true"></div><header><h1>{{ title }}</h1><div class="meta"><span>{{ source|default('剑网3官方消息') }}</span><time>{{ date }}</time></div></header><section class="body">{{ content|safe }}</section></main></body></html>

@@ -1,0 +1,193 @@
+{
+  "jx3api_token": {
+    "type": "string",
+    "description": "JX3API Token",
+    "hint": "在 https://www.jx3api.com 获取。LV.1 / LV.2 接口和事件推送需要。也可在插件可视化后台填写，支持粘贴 Bearer / token= 片段。",
+    "default": ""
+  },
+  "jx3api_ticket": {
+    "type": "string",
+    "description": "推栏 Ticket",
+    "hint": "推栏 App 登录凭证，名剑 / 名片 / 门派 / 资历等接口需要。与 Token 不同，请勿泄露。",
+    "default": ""
+  },
+  "jx3api_base_url": {
+    "type": "string",
+    "description": "JX3API 地址",
+    "hint": "一般保持 https://www.jx3api.com 即可。",
+    "default": "https://www.jx3api.com"
+  },
+  "jx3api_timeout": {
+    "type": "int",
+    "description": "JX3API 超时（秒）",
+    "default": 20,
+    "slider": {
+      "min": 3,
+      "max": 180,
+      "step": 1
+    }
+  },
+  "jx3api_retries": {
+    "type": "int",
+    "description": "JX3API 失败重试次数",
+    "hint": "仅对超时和 502/503/504 生效，0 表示不重试。",
+    "default": 1,
+    "slider": {
+      "min": 0,
+      "max": 5,
+      "step": 1
+    }
+  },
+  "jx3api_cache_ttl": {
+    "type": "int",
+    "description": "JX3API 缓存时间（秒）",
+    "hint": "0 表示关闭缓存。",
+    "default": 60,
+    "slider": {
+      "min": 0,
+      "max": 3600,
+      "step": 10
+    }
+  },
+  "default_server": {
+    "type": "string",
+    "description": "默认区服",
+    "hint": "例如 梦江南。填写后，角色 / 沙盘 / 奇遇 / 在线等未指定区服的指令会自动使用。",
+    "default": ""
+  },
+  "jx3box_timeout": {
+    "type": "int",
+    "description": "JX3BOX 超时（秒）",
+    "hint": "JX3BOX 地址已固定在代码中：cms.jx3box.com / next2.jx3box.com。",
+    "default": 25,
+    "slider": {
+      "min": 3,
+      "max": 180,
+      "step": 1
+    }
+  },
+  "jx3box_cache_ttl": {
+    "type": "int",
+    "description": "JX3BOX 缓存时间（秒）",
+    "default": 300,
+    "slider": {
+      "min": 0,
+      "max": 86400,
+      "step": 60
+    }
+  },
+  "jx3box_client": {
+    "type": "string",
+    "description": "JX3BOX 客户端",
+    "hint": "std = 正式服，origin = 缘起服。",
+    "default": "std"
+  },
+  "jx3box_global_level": {
+    "type": "int",
+    "description": "JX3BOX 配装装等",
+    "hint": "配装筛选使用的装备等级，随赛季调整，默认 130。",
+    "default": 130,
+    "slider": {
+      "min": 1,
+      "max": 999,
+      "step": 1
+    }
+  },
+  "online_api_url": {
+    "type": "string",
+    "description": "角色在线查询服务地址",
+    "hint": "第三方在线接口（如池清川分析器）。只填域名会自动拼接 /role_online，也可以直接填完整接口地址。",
+    "default": ""
+  },
+  "online_api_token": {
+    "type": "string",
+    "description": "角色在线查询令牌",
+    "hint": "第三方在线接口自己的令牌，与 JX3API Token 不同。",
+    "default": ""
+  },
+  "event_push_enabled": {
+    "type": "bool",
+    "description": "启用事件推送",
+    "hint": "连接 JX3API WebSocket 事件通道。需要 AstrBot 自带的 aiohttp。",
+    "default": false
+  },
+  "event_push_wss_url": {
+    "type": "string",
+    "description": "事件通道地址",
+    "hint": "事件推送的 WebSocket 地址，默认 wss://socket.nicemoe.cn。以后变更可直接修改。",
+    "default": "wss://socket.nicemoe.cn"
+  },
+  "event_push_token": {
+    "type": "string",
+    "description": "事件推送令牌",
+    "hint": "留空时自动复用 JX3API Token；也可填写单独的事件令牌。",
+    "default": ""
+  },
+  "event_push_actions": {
+    "type": "list",
+    "description": "推送事件编号",
+    "hint": "免费事件 2001~2006；其他编号为令牌事件。可在可视化后台勾选。",
+    "default": [2001, 2002, 2003, 2004, 2005, 2006]
+  },
+  "event_push_sessions": {
+    "type": "list",
+    "description": "事件推送目标会话",
+    "hint": "AstrBot 会话 ID 列表；群员也可以发送「事件推送 开启」自动加入。",
+    "default": []
+  },
+  "paid_enabled": {
+    "type": "bool",
+    "description": "启用付费授权",
+    "hint": "开启后，标记为付费的查询指令只对白名单内且未到期的群开放；关闭则全部免费。",
+    "default": false
+  },
+  "doubao_api_key": {
+    "type": "string",
+    "description": "豆包（火山方舟）API Key",
+    "hint": "https://console.volcengine.com/ark 创建。填写后才能使用「生图」「图生图」。",
+    "default": ""
+  },
+  "doubao_base_url": {
+    "type": "string",
+    "description": "豆包 API 地址",
+    "hint": "一般保持 https://ark.cn-beijing.volces.com/api/v3。",
+    "default": "https://ark.cn-beijing.volces.com/api/v3"
+  },
+  "doubao_model": {
+    "type": "string",
+    "description": "豆包生图模型 ID",
+    "hint": "例如 doubao-seedream-5-0-flash-260915、doubao-seedream-4-5-251128。",
+    "default": "doubao-seedream-5-0-flash-260915"
+  },
+  "doubao_size": {
+    "type": "string",
+    "description": "生成图片尺寸",
+    "hint": "如 1024x1024 / 1024x1536 / 1536x1024 / 2K。",
+    "default": "1024x1024"
+  },
+  "doubao_watermark": {
+    "type": "bool",
+    "description": "生成图片添加水印",
+    "default": false
+  },
+  "doubao_timeout": {
+    "type": "int",
+    "description": "豆包生成超时（秒）",
+    "default": 180,
+    "slider": {
+      "min": 10,
+      "max": 300,
+      "step": 10
+    }
+  },
+  "admin_log_limit": {
+    "type": "int",
+    "description": "后台日志保留条数",
+    "default": 300,
+    "slider": {
+      "min": 50,
+      "max": 1000,
+      "step": 50
+    }
+  }
+}
