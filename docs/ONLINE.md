@@ -84,4 +84,4 @@ GET {online_api_url}/role_online
 - `jx3portal/online.py`
 - `jx3portal/commands.py` 的 `_cmd_online`
 - `jx3portal/admin.py` 的 `online_test`
-- 参考协议：Inkar-Suki 项目的 `/role_online`
+
